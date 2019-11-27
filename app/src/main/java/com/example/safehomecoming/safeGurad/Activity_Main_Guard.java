@@ -23,6 +23,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.safehomecoming.R;
@@ -85,7 +87,19 @@ public class Activity_Main_Guard extends AppCompatActivity
     // 레이아웃
     private Button requstbtn;
 
+    private ImageView
+            button_nav       //
+            ;
 
+    private LinearLayout
+            nav_area            // 네비게이션 영역
+            ,   nav_mypage      // 네이게이션 버튼_마이페이지
+            ,   nav_boundary    // 네이게이션 버튼_경계모드
+            ,   nav_my_child    // 네이게이션 버튼_미아찾기
+            ,   nav_cctv        // 네이게이션 버튼_CCTV
+            ;
+
+    boolean navIsOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -93,9 +107,16 @@ public class Activity_Main_Guard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_guard);
 
-
         requstbtn = (Button)findViewById(R.id.button_request_safe_guard); //매칭 대기 버튼
 
+        // 네비게이션
+        button_nav = findViewById(R.id.button_nav);
+        nav_area = findViewById(R.id.nav_area);
+        nav_mypage = findViewById(R.id.nav_mypage);
+        nav_boundary = findViewById(R.id.nav_boundary);
+        nav_my_child = findViewById(R.id.nav_my_child);
+        nav_cctv = findViewById(R.id.nav_cctv);
+        // View Find 끝
 
         //매칭 대기 버튼
         requstbtn.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +144,51 @@ public class Activity_Main_Guard extends AppCompatActivity
         mapFragment.getMapAsync(this);
         // 구글 지도 관련 설정 끝
         //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+        // todo: 네비게이션 버튼 모양 세팅
+        if (navIsOpen)
+        {
+//            button_nav.setImageResource(R.drawable.ic_nav_cancel);
+            button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
+//            button_nav.setBackground(getDrawable(R.drawable.ic_nav_cancel));
+            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+            navIsOpen = false;
+        }
+
+        else
+        {
+//            button_nav.setImageResource(R.drawable.ic_nav_open);
+            button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
+//            button_nav.setBackground(getDrawable(R.drawable.ic_nav_open));
+            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+            navIsOpen = true;
+        }
+
+        // todo: 네이게이션 버튼 클릭
+        button_nav.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (navIsOpen)
+                {
+                    button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
+                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+                    nav_area.setVisibility(View.GONE);
+                    navIsOpen = false;
+                }
+
+                else
+                {
+                    button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
+                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+                    nav_area.setVisibility(View.VISIBLE);
+                    navIsOpen = true;
+                }
+            }
+        });
+
 
     }
 

@@ -22,6 +22,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +86,20 @@ public class Activity_Main_Citizen extends AppCompatActivity
             ,       button_my_guard_info        //
             ;
 
+    private ImageView
+            button_nav       //
+    ;
+
+    private LinearLayout
+            nav_area            // 네비게이션 영역
+            ,   nav_mypage      // 네이게이션 버튼_마이페이지
+            ,   nav_boundary    // 네이게이션 버튼_경계모드
+            ,   nav_my_child    // 네이게이션 버튼_미아찾기
+            ,   nav_cctv        // 네이게이션 버튼_CCTV
+    ;
+
+    boolean navIsOpen = false;
+
     public static String GET_CURRENT_CITIZEN_PATH, GET_LATITUDE, GET_LONGITUDE, GET_CURRENT_FEATURE_NAME;
 
     @Override
@@ -109,10 +125,62 @@ public class Activity_Main_Citizen extends AppCompatActivity
                 .findFragmentById(R.id.map_citizen);
         mapFragment.getMapAsync(this);
 
-
         button_my_guard_info = findViewById(R.id.button_my_guard_info);
         button_request_safe_guard = findViewById(R.id.button_request_safe_guard);
+
+        // 네비게이션
+        button_nav = findViewById(R.id.button_nav);
+        nav_area = findViewById(R.id.nav_area);
+        nav_mypage = findViewById(R.id.nav_mypage);
+        nav_boundary = findViewById(R.id.nav_boundary);
+        nav_my_child = findViewById(R.id.nav_my_child);
+        nav_cctv = findViewById(R.id.nav_cctv);
         // View Find 끝
+
+        // 네비게이션 세팅
+
+        // todo: 네비게이션 버튼 모양 세팅
+        if (navIsOpen)
+        {
+//            button_nav.setImageResource(R.drawable.ic_nav_cancel);
+            button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
+//            button_nav.setBackground(getDrawable(R.drawable.ic_nav_cancel));
+            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+            navIsOpen = false;
+        }
+
+        else
+        {
+//            button_nav.setImageResource(R.drawable.ic_nav_open);
+            button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
+//            button_nav.setBackground(getDrawable(R.drawable.ic_nav_open));
+            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+            navIsOpen = true;
+        }
+
+        // todo: 네이게이션 버튼 클릭
+        button_nav.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (navIsOpen)
+                {
+                    button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
+                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+                    nav_area.setVisibility(View.GONE);
+                    navIsOpen = false;
+                }
+
+                else
+                {
+                    button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
+                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+                    nav_area.setVisibility(View.VISIBLE);
+                    navIsOpen = true;
+                }
+            }
+        });
 
         // 안심 귀가요청 화면으로 이동
         button_request_safe_guard.setOnClickListener(new View.OnClickListener()
