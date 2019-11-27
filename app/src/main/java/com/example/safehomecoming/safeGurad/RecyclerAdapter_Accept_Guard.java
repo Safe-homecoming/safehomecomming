@@ -23,7 +23,7 @@ public class RecyclerAdapter_Accept_Guard extends RecyclerView.Adapter<RecyclerA
     //============================================================================================
     // EVENT 관련
     public interface Guard_viewClickListener{
-        void onAcceptClicked(View v, int position);
+        void onAcceptClicked(View v, int position, int idx);
     }
 
     private Guard_viewClickListener mListener = null;
@@ -79,6 +79,16 @@ public class RecyclerAdapter_Accept_Guard extends RecyclerView.Adapter<RecyclerA
             gender = itemView.findViewById(R.id.genderimage); // 성별 icon
             acceptBtn =itemView.findViewById(R.id.acceptbtn);  // 수락 버튼
 
+
+        }
+
+        void onBind(final Accept_Data data) {
+            name.setText(data.getName());
+            leftkm.setText(data.getLeftKm()+"m");
+            workkm.setText(data.getWorkKm()+"m");
+            gender.setImageResource(data.getResId());
+
+            //수락 버튼을 눌렀을 경우
             acceptBtn.setOnClickListener(new View.OnClickListener(){
 
                 @Override
@@ -86,18 +96,11 @@ public class RecyclerAdapter_Accept_Guard extends RecyclerView.Adapter<RecyclerA
                     int pos = getAdapterPosition();
                     if(pos != RecyclerView.NO_POSITION) {
                         if (mListener != null) {
-                            mListener.onAcceptClicked(v,pos);
+                            mListener.onAcceptClicked(v,pos, data.getIdx());
                         }
                     }
                 }
             });
-        }
-
-        void onBind(Accept_Data data) {
-            name.setText(data.getName());
-            leftkm.setText(data.getLeftKm()+"m");
-            workkm.setText(data.getWorkKm()+"m");
-            gender.setImageResource(data.getResId());
         }
     }
 }

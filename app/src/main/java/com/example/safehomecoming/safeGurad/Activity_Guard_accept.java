@@ -2,6 +2,7 @@ package com.example.safehomecoming.safeGurad;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -35,7 +36,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
 
     //리사이클러뷰 관련
     private RecyclerAdapter_Accept_Guard adapter;
-    String[] stId;   // request 인덱스 번호
+    Integer[] stId;   // request 인덱스 번호
     String[] stGender; //요청자 성별
     String[] stName; //요청자 이름
     Integer [] stHome_distance; //출발 지점에서 도착지점의 거리 db에서 가져올때  미터 기준으로 가져옴
@@ -160,8 +161,43 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
         adapter.setOnMemo_ViewClickListener(this);
     }
     //리사이클러뷰 수락 버튼 누른후
+    // 수락 버튼 클릭후 match 상태 와 결과를 update 시켜줌
     @Override
-    public void onAcceptClicked(View v, int position) {
+    public void onAcceptClicked(View v, int position, int idx) {
+
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<Resultm> call = apiInterface.reqeustaccept(idx);
+
+        call.enqueue(new Callback<Resultm>() {
+            @Override
+            public void onResponse(Call<Resultm> call, Response<Resultm> response) {
+                //정상 결과
+                Resultm result = response.body();
+                String result_code = response.body().getResult_code();
+
+                if (response.body() != null) {
+                    if (result.getResult().equals("ok")) {
+
+                        //성공
+                        Intent intent = new Intent(Activity_Guard_accept.this,Activity_Main_Guard.class);
+//                        intent.putExtra("fragreplace", 2);
+                        startActivity(intent);
+                    } else if (result_code.equals("200")) {
+                        //실패
+                        Toast.makeText(Activity_Guard_accept.this, "완료  되지 않습니다 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    Log.v("Accept test update", response.body().toString());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Resultm> call, Throwable t) {
+                //네트워크 문제
+                Toast.makeText(Activity_Guard_accept.this, "서비스 연결이 원활하지 않습니다", Toast.LENGTH_SHORT).show();
+            }
+        });
         Log.i("acceptBtnTesy","수락 버튼 눌렸다잉");
     }
 
@@ -190,7 +226,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
                 int result_row = response.body().getResult_row();
 
                 // String 배열 초기화
-                stId = new String[result_row];  // reqeust 인덱스 번호
+                stId = new Integer[result_row];  // reqeust 인덱스 번호
                 stGender = new String[result_row];  //요청자 성별
                 stName = new String[result_row]; // 요청자 이름
                 stcLatitude = new Double[result_row]; //요청자의 위도
@@ -212,7 +248,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
                         }
 
                         // 배열을 list에 담기
-                        List<String> listId = Arrays.asList(stId);
+                        List<Integer> listId = Arrays.asList(stId);
                         List<String> listgender = Arrays.asList(stGender);
                         List<String> listname = Arrays.asList(stName);
                         List<Integer> listdistance = Arrays.asList(stHome_distance);
@@ -227,6 +263,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
                         for (int i = 0; i < listId.size(); i++) {
                             // 각 List의 값들을 Accept_Data 객체에 set 해줍니다.
                             Accept_Data data = new Accept_Data();
+                            data.setIdx(listId.get(i));  // 수락된 list의 db index
                             data.setLeftKm(listdistance.get(i));// 출발에서 도착까지의 미터 거리
                             data.setName(listname.get(i));// 요청자 이름
 
@@ -274,6 +311,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
         });
 
     }
+
 
 
 }

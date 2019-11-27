@@ -9,6 +9,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface ApiInterface
 {
@@ -26,6 +27,10 @@ public interface ApiInterface
     // 안심이 신청 현황 내용
     @GET("requstcitizen.php")
     Call<Resultm> requestinfo();
+
+    // 안심이가 수락 했을때 update
+    @GET("helper_accpet_update.php")
+    Call<Resultm> reqeustaccept(@Query("id") int id);
 }
 
 

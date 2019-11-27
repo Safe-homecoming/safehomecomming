@@ -41,6 +41,7 @@
         <activity android:name=".safeGurad.Activity_Main_Guard" />
         <activity android:name=".citizen.Activity_Main_Citizen" />
         <activity android:name=".citizen.Activity_DaumWebView" />
+        <activity android:name=".safeGurad.Activity_Guard_accept"/>
     </application>
 
 </manifest>
