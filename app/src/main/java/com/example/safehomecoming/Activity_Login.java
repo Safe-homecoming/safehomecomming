@@ -77,6 +77,20 @@ public class Activity_Login extends AppCompatActivity
                                     startActivity(intent);
                                     finish();
                                 }
+
+//
+//                                SharedPreferences pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+//
+//                                // SharedPreferences 의 데이터를 저장/편집 하기위해 Editor 변수를 선언한다.
+//                                SharedPreferences.Editor editor = pref.edit();
+//
+//                                // key값에 value값을 저장한다.
+//                                // String, boolean, int, float, long 값 모두 저장가능하다.
+//                                editor.putString(key, value);
+//
+//                                // 메모리에 있는 데이터를 저장장치에 저장한다.
+//                                editor.commit();
+
                             }else{
                                 //실패0
                                 Toast.makeText(Activity_Login.this,"로그인이 실패하였습니다.",Toast.LENGTH_SHORT).show();
