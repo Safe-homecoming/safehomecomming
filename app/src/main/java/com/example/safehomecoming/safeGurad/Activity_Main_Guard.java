@@ -20,7 +20,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.safehomecoming.R;
@@ -61,7 +63,9 @@ public class Activity_Main_Guard extends AppCompatActivity
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
-    private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
+
+    private static final int UPDATE_INTERVAL_MS = 5000;  // 1초//  현재위치 업데이트 시간차
+
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
     private AppCompatActivity mActivity;
@@ -78,14 +82,31 @@ public class Activity_Main_Guard extends AppCompatActivity
             .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
     // 구글 맵 관련 변수 모음 끝
 
+    // 레이아웃
+    private Button requstbtn;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_guard);
 
-        Log.e(TAG, "onCreate: ");
 
+        requstbtn = (Button)findViewById(R.id.button_request_safe_guard); //매칭 대기 버튼
+
+
+        //매칭 대기 버튼
+        requstbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 도우미 요청 현황으로 이동
+                Intent intent = new Intent(Activity_Main_Guard.this, Activity_Guard_accept.class);
+                startActivity(intent);
+            }
+        });
+        //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -101,6 +122,8 @@ public class Activity_Main_Guard extends AppCompatActivity
                 .findFragmentById(R.id.map_guard);
         mapFragment.getMapAsync(this);
         // 구글 지도 관련 설정 끝
+        //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
     }
 
     // todo: 아래부터 전부 구글 지도 관련 메소드 (코드 분석 필요합니다)
@@ -162,7 +185,7 @@ public class Activity_Main_Guard extends AppCompatActivity
             }
         });
     }
-
+    //안드로이드 GPS 권한 체크
     private void startLocationUpdates()
     {
         if (!checkLocationServicesStatus())
@@ -330,7 +353,6 @@ public class Activity_Main_Guard extends AppCompatActivity
 
         try
         {
-
             addresses = geocoder.getFromLocation(
                     latlng.latitude,
                     latlng.longitude,
@@ -356,12 +378,24 @@ public class Activity_Main_Guard extends AppCompatActivity
         } else
         {
             Address address = addresses.get(0);
+
+            Log.e(TAG, "getCurrentAddress: address: " + address.toString());
+
+            Log.e(TAG, "getCurrentAddress: address.getAddressLine: " + address.getAddressLine(0));
+
+            Log.e(TAG, "getCurrentAddress: address getAdminArea 주소: " + address.getAdminArea());
+            Log.e(TAG, "getCurrentAddress: address thoroughfare 동: " + address.getThoroughfare());
+            Log.e(TAG, "getCurrentAddress: address getFeatureName 번지: " + address.getFeatureName());
+
+            Log.e(TAG, "getCurrentAddress: address latitude 위도: " + address.getLatitude());
+            Log.e(TAG, "getCurrentAddress: address longitude 경도: " + address.getLongitude());
+
             return address.getAddressLine(0).toString();
         }
 
     }
 
-
+    // 안드로이드의 GPS 위치  사용 허가 받기
     public boolean checkLocationServicesStatus()
     {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -600,17 +634,17 @@ public class Activity_Main_Guard extends AppCompatActivity
                 //사용자가 GPS 활성 시켰는지 검사
                 if (checkLocationServicesStatus())
                 {
-                    if (checkLocationServicesStatus())
-                    {
-                        Log.e(TAG, "onActivityResult : 퍼미션 가지고 있음");
+//                    if (checkLocationServicesStatus())
+//                    {
+                    Log.e(TAG, "onActivityResult : 퍼미션 가지고 있음");
 
-                        if (mGoogleApiClient.isConnected() == false)
-                        {
-                            Log.e(TAG, "onActivityResult : mGoogleApiClient connect ");
-                            mGoogleApiClient.connect();
-                        }
-                        return;
+                    if (mGoogleApiClient.isConnected() == false)
+                    {
+                        Log.e(TAG, "onActivityResult : mGoogleApiClient connect ");
+                        mGoogleApiClient.connect();
                     }
+                    return;
+//                    }
                 }
 
                 break;

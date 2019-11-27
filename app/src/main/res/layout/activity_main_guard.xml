@@ -17,6 +17,7 @@
 
     <!--타이틀바-->
     <LinearLayout
+        android:id="@+id/fra_mypage_title_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
@@ -28,10 +29,10 @@
             android:layout_weight="1"
             android:gravity="left|center"
             android:paddingHorizontal="15dp"
-            android:text="도우미 화면"
+            android:text="Safe Home Comming"
             android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textSize="20dp"/>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,20 +46,31 @@
 
     </LinearLayout>
 
+    <View
+        android:background="@color/gray"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"/>
+
     <!--화면 하단 버튼-->
 
-    <TextView
+    <View
+        android:background="@color/gray"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"/>
+
+    <Button
+        android:id="@+id/button_request_safe_guard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="13dp"
         android:layout_weight="1"
         android:layout_gravity="bottom|center"
         android:background="@color/white"
         android:paddingHorizontal="15dp"
-        android:text="button"
+        android:text="매칭 대기 하기"
         android:textColor="@color/black"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        />
 
 </FrameLayout>
