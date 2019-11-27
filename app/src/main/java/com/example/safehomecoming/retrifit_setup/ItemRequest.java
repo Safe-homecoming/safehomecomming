@@ -2,7 +2,7 @@ package com.example.safehomecoming.retrifit_setup;
 
 public class ItemRequest {
 
-    private String idx;
+    private int idx;
     private String cur_latitude;
     private String cur_longitude;
     private String homecoming_distance;
@@ -30,11 +30,12 @@ public class ItemRequest {
         this.gender = gender;
     }
 
-    public String getIdx() {
+
+    public int getIdx() {
         return idx;
     }
 
-    public void setIdx(String idx) {
+    public void setIdx(int idx) {
         this.idx = idx;
     }
 
