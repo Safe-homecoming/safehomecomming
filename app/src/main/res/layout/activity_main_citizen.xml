@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".citizen.Activity_Main_Citizen">
+
+    <!--지도 뷰-->
+    <fragment
+        android:id="@+id/map_citizen"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity" />
+
+    <!--타이틀바-->
+    <LinearLayout
+        android:id="@+id/fra_mypage_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center"
+            android:paddingHorizontal="15dp"
+            android:text="Safe Home Comming"
+            android:textColor="@color/black"
+            android:textSize="20dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:paddingHorizontal="15dp"
+            android:text="(button)"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/gray"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"/>
+
+    <!--화면 하단 버튼-->
+
+    <View
+        android:background="@color/gray"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"/>
+
+    <TextView
+        android:id="@+id/button_request_safe_guard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="13dp"
+        android:layout_weight="1"
+        android:layout_gravity="bottom|center"
+        android:background="@color/white"
+        android:paddingHorizontal="15dp"
+        android:text="안심이 호출"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        />
+
+</FrameLayout>

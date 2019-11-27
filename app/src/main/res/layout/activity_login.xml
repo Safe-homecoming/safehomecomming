@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity_Login">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="Safe\nHome Comming"
+        android:textStyle="bold"
+        android:layout_marginBottom="50dp"
+        android:textColor="@color/gray"
+        android:textSize="35dp" />
+
+    <!--이메일-->
+    <EditText
+        android:id="@+id/login_mail"
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:background="@drawable/item_edit_text_black"
+        android:gravity="center"
+        android:hint="이메일"
+        android:inputType="textEmailAddress"
+        android:padding="8dp"
+        android:textColor="@color/gray"
+        android:textColorHint="@color/gray"
+        android:textSize="20dp" />
+
+    <!--</com.google.android.material.textfield.TextInputLayout>-->
+
+    <!--<com.google.android.material.textfield.TextInputLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textColorHint="@color/white">-->
+
+    <!--비밀번호-->
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:background="@drawable/item_edit_text_black"
+        android:gravity="center"
+        android:hint="비밀번호"
+        android:inputType="textPassword"
+        android:padding="8dp"
+        android:textColor="@color/gray"
+        android:textColorHint="@color/gray"
+        android:textSize="20dp" />
+
+    <!--</com.google.android.material.textfield.TextInputLayout>-->
+
+    <ProgressBar
+        android:id="@+id/login_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:visibility="gone" />
+
+    <!--실제 로그인 버튼-->
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/item_edit_text_black"
+        android:text="로그인"
+        android:textSize="20dp" />
+
+    <!--가입버튼-->
+    <TextView
+        android:id="@+id/go_reg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/item_edit_text_black"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        android:text="가입하기"
+        android:textColor="@color/gray"
+        android:textSize="12dp" />
+
+    <!--임시 로그인 버튼-->
+    <Button
+        android:id="@+id/citizon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/item_edit_text_black"
+        android:text="시민 로그인"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/guard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/item_edit_text_black"
+        android:text="도우미 로그인"
+        android:textSize="20dp" />
+
+</LinearLayout>
