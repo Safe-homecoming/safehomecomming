@@ -51,6 +51,7 @@ public class Activity_Main_Citizen extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener
 {
+
     private String TAG = "Activity_Main_Citizen";
 
     // 구글 맵 관련 변수 모음
@@ -76,17 +77,14 @@ public class Activity_Main_Citizen extends AppCompatActivity
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(UPDATE_INTERVAL_MS)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
-            ;
+            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
     // 구글 맵 관련 변수 모음 끝
 
-    private TextView button_request_safe_guard;
-
-    public static String GET_CURRENT_CITIZEN_PATH
-            ,           GET_LATITUDE
-            ,           GET_LONGITUDE
-            ,           GET_CURRENT_FEATURE_NAME
+    private TextView button_request_safe_guard  //
+            ,       button_my_guard_info        //
             ;
+
+    public static String GET_CURRENT_CITIZEN_PATH, GET_LATITUDE, GET_LONGITUDE, GET_CURRENT_FEATURE_NAME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -112,6 +110,7 @@ public class Activity_Main_Citizen extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
 
+        button_my_guard_info = findViewById(R.id.button_my_guard_info);
         button_request_safe_guard = findViewById(R.id.button_request_safe_guard);
         // View Find 끝
 
@@ -125,9 +124,22 @@ public class Activity_Main_Citizen extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        button_my_guard_info.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
     }
 
-
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+    }
 
     // todo: 아래부터 전부 구글 지도 관련 메소드 (코드 분석 필요합니다)
     @Override
@@ -254,7 +266,7 @@ public class Activity_Main_Citizen extends AppCompatActivity
         String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                 + " 경도:" + String.valueOf(location.getLongitude());
 
-        Log.e(TAG, "onLocationChanged: markerSnippet: " + markerSnippet );
+        Log.e(TAG, "onLocationChanged: markerSnippet: " + markerSnippet);
 
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location, markerTitle, markerSnippet);
@@ -392,7 +404,7 @@ public class Activity_Main_Citizen extends AppCompatActivity
 //            Log.e(TAG, "getCurrentAddress: address longitude 경도: " + address.getLongitude());
 
             // 현재 주소
-            GET_CURRENT_CITIZEN_PATH = address.getAdminArea() +  " " + address.getThoroughfare();
+            GET_CURRENT_CITIZEN_PATH = address.getAdminArea() + " " + address.getThoroughfare();
 
             //
             GET_CURRENT_FEATURE_NAME = address.getFeatureName();

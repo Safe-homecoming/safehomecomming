@@ -14,7 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".citizen.Activity_Select_Address"></activity>
+        <service
+            android:name=".service.MyFirebaseInstanceIDService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".citizen.Activity_Select_Address" />
         <activity android:name=".citizen.Activity_success_guard_request" />
         <activity android:name=".citizen.Activity_fail_request_guard" />
         <activity android:name=".citizen.Activity_Wait_for_request_guard_response" />

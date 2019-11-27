@@ -130,9 +130,6 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
         // 안심이의 좌표 정보 필요
 //        Log.e(TAG, "onCheckedChanged: 출발, 안심이 두 지점 사이의 거리: " + GET_SELECT_DESTINATION);
 
-
-
-
         // todo: 요청 취소 버튼
         button_cancel_request_safe_guard.setOnClickListener(new View.OnClickListener()
         {
@@ -276,6 +273,7 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
                                     endLatFilter[1],
                                     GET_SELECT_GUARD_GENDER,
                                     "user1");
+
                         }
 
                         // todo: 조회됨 && 일치하는 성별 없음
@@ -322,7 +320,12 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
                                                     GET_FAIL_MESSAGE = "요청하신 안심이가\n\n주변에 없어요 :(";
 
                                                     // 매칭 실패 처리하기
-                                                    updateMatchFail("user1");
+                                                    Intent intent = new Intent(
+                                                            Activity_Wait_for_request_guard_response.this,
+                                                            Activity_fail_request_guard.class);
+                                                    startActivity(intent);
+                                                    finish();
+//                                                    updateMatchFail("user1");
                                                 }
                                             });
 
@@ -549,11 +552,11 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
                 else if (timerType.equals("waitForHelperRequest"))
                 {
                     // todo: 10초간 도우미가 응답 없으면 매칭 실패 화면으로 이동
-                    if (Integer.parseInt(text) == 30)
+                    if (Integer.parseInt(text) == 10)
                     {
+                        GET_FAIL_MESSAGE = "응답을 받지 못 했습니다\n\n안심이가 모두 바쁜 가봐요 :(";
                         // 매칭 실패 처리하기
                         updateMatchFail("user1");
-
                     }
                 }
             }
