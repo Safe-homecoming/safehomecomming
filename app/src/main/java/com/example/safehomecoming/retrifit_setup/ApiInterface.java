@@ -7,6 +7,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ApiInterface
@@ -21,6 +22,10 @@ public interface ApiInterface
 //            , @Field("userLongitude") String userLongitude
 //            , @Field("reqGender") String reqGender
 //    );
+
+    // 안심이 신청 현황 내용
+    @GET("requstcitizen.php")
+    Call<Resultm> requestinfo();
 }
 
 
