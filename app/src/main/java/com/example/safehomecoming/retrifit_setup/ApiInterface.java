@@ -2,10 +2,12 @@ package com.example.safehomecoming.retrifit_setup;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -31,6 +33,12 @@ public interface ApiInterface
     // 안심이가 수락 했을때 update
     @GET("helper_accpet_update.php")
     Call<Resultm> reqeustaccept(@Query("id") int id);
+
+    //회원 로그인
+    @FormUrlEncoded
+    @POST("memberchek.php")
+    Call<Resultm> logincheck(@FieldMap HashMap<String, Object> param);
+
 }
 
 
