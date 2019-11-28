@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,7 +28,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.safehomecoming.Activity_CCTV;
 import com.example.safehomecoming.R;
+import com.example.safehomecoming.service.addFCMToken;
+import com.example.safehomecoming.service.MyFirebaseInstanceIDService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -43,9 +47,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import static com.example.safehomecoming.Activity_Login.GET_USER_ID;
 
 public class Activity_Main_Citizen extends AppCompatActivity
         implements OnMapReadyCallback,
@@ -83,20 +95,20 @@ public class Activity_Main_Citizen extends AppCompatActivity
     // 구글 맵 관련 변수 모음 끝
 
     private TextView button_request_safe_guard  //
-            ,       button_my_guard_info        //
+            , button_my_guard_info        //
             ;
 
     private ImageView
             button_nav       //
-    ;
+            ;
 
     private LinearLayout
             nav_area            // 네비게이션 영역
-            ,   nav_mypage      // 네이게이션 버튼_마이페이지
-            ,   nav_boundary    // 네이게이션 버튼_경계모드
-            ,   nav_my_child    // 네이게이션 버튼_미아찾기
-            ,   nav_cctv        // 네이게이션 버튼_CCTV
-    ;
+            , nav_mypage      // 네이게이션 버튼_마이페이지
+            , nav_boundary    // 네이게이션 버튼_경계모드
+            , nav_my_child    // 네이게이션 버튼_미아찾기
+            , nav_cctv        // 네이게이션 버튼_CCTV
+            ;
 
     boolean navIsOpen = false;
 
@@ -113,6 +125,56 @@ public class Activity_Main_Citizen extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
+        startService(intent);
+
+        // todo: 유저의 FCM 토큰 추가하기
+        addFCMToken addFCMToken = new addFCMToken();
+        addFCMToken.addFCM_Token(GET_USER_ID, Activity_Main_Citizen.this);
+
+        final String token = "dk0bNURpl28:APA91bGZgxStbI_edfXvvRqSvy1UD8UJcTV-8dXF_76DLFSzCRa4QxAJWIbiF6BcHsqj7FN96CQWW5ajKP1dveSDGghDfIuR85J3H8bQprIKeTm9ntDgvvT3oGFQbmYd8wbn6iVBx2nO";
+//        addFCMToken.sendPostToFCM(token, "제목", "됬다!!! 하하!");
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Log.e(TAG, "run: FMC 메시지 생성 start");
+                    // FMC 메시지 생성 start
+                    JSONObject root = new JSONObject();
+                    JSONObject notification = new JSONObject();
+                    notification.put("body", "됬다!!! 하하!");
+                    notification.put("title", "제목");
+                    root.put("notification", notification);
+                    root.put("to", token);
+                    // FMC 메시지 생성 end
+                    Log.e(TAG, "sendPostToFCM: notification: " + notification);
+
+
+                    URL Url = new URL("https://fcm.googleapis.com/fcm/send");
+                    HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
+                    conn.addRequestProperty("Authorization", "key=" + "AAAA7pJGgbg:APA91bGoKVGCmJDJ1gPTVZ0ydjnCgpgt1v1NdIk3MalCeiv69VdbWRBx-Q7N6vAYob2WSmC6fkecJ3-SCeq5QqtVjVW7_ghsi8kQi2kRkNSTguJYzdNY6gaN8wDJsrRk5pvO4MaGkJfo");
+//            conn.setRequestProperty("Accept", "application/json");
+                    conn.setRequestProperty("Content-type", "application/json");
+                    OutputStream os = conn.getOutputStream();
+                    os.write(root.toString().getBytes("utf-8"));
+                    os.flush();
+                    conn.getResponseCode();
+
+                    Log.e(TAG, "run: 전송완료");
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Log.e(TAG, "run: e: " + e);
+                }
+            }
+        }).start();
+
         // todo: View Find
         mActivity = this;
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -125,41 +187,67 @@ public class Activity_Main_Citizen extends AppCompatActivity
                 .findFragmentById(R.id.map_citizen);
         mapFragment.getMapAsync(this);
 
-        button_my_guard_info = findViewById(R.id.button_my_guard_info);
-        button_request_safe_guard = findViewById(R.id.button_request_safe_guard);
+        button_my_guard_info =
 
+                findViewById(R.id.button_my_guard_info);
+
+        button_request_safe_guard =
+
+                findViewById(R.id.button_request_safe_guard);
+//
         // 네비게이션
-        button_nav = findViewById(R.id.button_nav);
-        nav_area = findViewById(R.id.nav_area);
-        nav_mypage = findViewById(R.id.nav_mypage);
-        nav_boundary = findViewById(R.id.nav_boundary);
-        nav_my_child = findViewById(R.id.nav_my_child);
-        nav_cctv = findViewById(R.id.nav_cctv);
+        button_nav =
+
+                findViewById(R.id.button_nav);
+
+        nav_area =
+
+                findViewById(R.id.nav_area);
+
+        nav_mypage =
+
+                findViewById(R.id.nav_mypage);
+
+        nav_boundary =
+
+                findViewById(R.id.nav_boundary);
+
+        nav_my_child =
+
+                findViewById(R.id.nav_my_child);
+
+        nav_cctv =
+
+                findViewById(R.id.nav_cctv_c);
         // View Find 끝
+
+        // todo: 네이게이션 버튼 이벤트 모음
+        navButtonSet();
 
         // 네비게이션 세팅
 
         // todo: 네비게이션 버튼 모양 세팅
         if (navIsOpen)
+
         {
 //            button_nav.setImageResource(R.drawable.ic_nav_cancel);
             button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
 //            button_nav.setBackground(getDrawable(R.drawable.ic_nav_cancel));
-            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen);
             navIsOpen = false;
-        }
+        } else
 
-        else
         {
 //            button_nav.setImageResource(R.drawable.ic_nav_open);
             button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
 //            button_nav.setBackground(getDrawable(R.drawable.ic_nav_open));
-            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen);
             navIsOpen = true;
         }
 
         // todo: 네이게이션 버튼 클릭
         button_nav.setOnClickListener(new View.OnClickListener()
+
         {
             @Override
             public void onClick(View v)
@@ -167,23 +255,35 @@ public class Activity_Main_Citizen extends AppCompatActivity
                 if (navIsOpen)
                 {
                     button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
-                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen);
                     nav_area.setVisibility(View.GONE);
                     navIsOpen = false;
-                }
-
-                else
+                } else
                 {
                     button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
-                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen);
                     nav_area.setVisibility(View.VISIBLE);
                     navIsOpen = true;
                 }
             }
         });
 
+        Log.e(TAG, "navButtonSet: ");
+        nav_cctv.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Log.e(TAG, "navButtonSet: nav_cctv");
+                Intent intent = new Intent(Activity_Main_Citizen.this, Activity_CCTV.class);
+                startActivity(intent);
+            }
+        });
+
         // 안심 귀가요청 화면으로 이동
         button_request_safe_guard.setOnClickListener(new View.OnClickListener()
+
         {
             @Override
             public void onClick(View v)
@@ -194,6 +294,7 @@ public class Activity_Main_Citizen extends AppCompatActivity
         });
 
         button_my_guard_info.setOnClickListener(new View.OnClickListener()
+
         {
             @Override
             public void onClick(View v)
@@ -201,6 +302,67 @@ public class Activity_Main_Citizen extends AppCompatActivity
 
             }
         });
+    }
+
+    // todo: 네비게이션 버튼 이벤트 모음
+    private void navButtonSet()
+    {
+//        // 네비게이션 세팅
+//
+//        // todo: 네비게이션 버튼 모양 세팅
+//        if (navIsOpen)
+//        {
+////            button_nav.setImageResource(R.drawable.ic_nav_cancel);
+//            button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
+////            button_nav.setBackground(getDrawable(R.drawable.ic_nav_cancel));
+//            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+//            navIsOpen = false;
+//        }
+//
+//        else
+//        {
+////            button_nav.setImageResource(R.drawable.ic_nav_open);
+//            button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
+////            button_nav.setBackground(getDrawable(R.drawable.ic_nav_open));
+//            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+//            navIsOpen = true;
+//        }
+//
+//        // todo: 네이게이션 버튼 클릭
+//        button_nav.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                if (navIsOpen)
+//                {
+//                    button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
+//                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+//                    nav_area.setVisibility(View.GONE);
+//                    navIsOpen = false;
+//                }
+//
+//                else
+//                {
+//                    button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
+//                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+//                    nav_area.setVisibility(View.VISIBLE);
+//                    navIsOpen = true;
+//                }
+//            }
+//        });
+//
+//        Log.e(TAG, "navButtonSet: " );
+//        nav_cctv.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                Log.e(TAG, "navButtonSet: nav_cctv" );
+//                Intent intent = new Intent(Activity_Main_Citizen.this, Activity_CCTV.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     @Override
@@ -328,13 +490,13 @@ public class Activity_Main_Citizen extends AppCompatActivity
         currentPosition
                 = new LatLng(location.getLatitude(), location.getLongitude());
 
-        Log.d(TAG, "onLocationChanged : ");
+//        Log.d(TAG, "onLocationChanged : ");
 
         String markerTitle = getCurrentAddress(currentPosition);
         String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                 + " 경도:" + String.valueOf(location.getLongitude());
 
-        Log.e(TAG, "onLocationChanged: markerSnippet: " + markerSnippet);
+//        Log.e(TAG, "onLocationChanged: markerSnippet: " + markerSnippet);
 
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location, markerTitle, markerSnippet);

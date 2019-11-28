@@ -38,7 +38,6 @@ public interface ApiInterface
     @FormUrlEncoded
     @POST("memberchek.php")
     Call<Resultm> logincheck(@FieldMap HashMap<String, Object> param);
-
 }
 
 

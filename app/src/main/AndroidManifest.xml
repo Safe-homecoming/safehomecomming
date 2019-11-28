@@ -20,10 +20,13 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activity_Citizeninfo"></activity>
 
+        <activity android:name=".Activity_CCTV"></activity>
+
         <service
             android:name=".service.MyFirebaseInstanceIDService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true">
+        </service>
 
         <activity android:name=".citizen.Activity_Select_Address" />
         <activity android:name=".citizen.Activity_success_guard_request" />

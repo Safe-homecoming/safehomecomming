@@ -31,6 +31,9 @@ import android.widget.Toast;
 
 import com.example.safehomecoming.Activity_Citizeninfo;
 import com.example.safehomecoming.R;
+import com.example.safehomecoming.citizen.Activity_Main_Citizen;
+import com.example.safehomecoming.service.MyFirebaseInstanceIDService;
+import com.example.safehomecoming.service.addFCMToken;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -46,7 +49,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -201,9 +209,55 @@ public class Activity_Main_Guard extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
         //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
+        startService(intent);
+
+        // todo: 유저의 FCM 토큰 추가하기 (김성훈)
+        addFCMToken addFCMToken = new addFCMToken();
+        addFCMToken.addFCM_Token("dd", Activity_Main_Guard.this);
+
+        String token = "eBo4JYXx1QY:APA91bHYSZz02itI_17dBAVMs7Ul1ib-pEfs5pSIrPfoNveDG8OUaFd81bVLXeuNdqbTR6vZUuQe4apHzaXwuvIYp4Lh0W2CDUHLydk6UhT9zaNj0MJYC6AI4oQ5AkUKgll1E5yi9CiN";
+        addFCMToken.sendPostToFCM(token,"제목","됬다!!! 하하!");
+
+        try
+        {
+            // FMC 메시지 생성 start
+            JSONObject root = new JSONObject();
+            JSONObject notification = new JSONObject();
+            notification.put("body", "됬다!!! 하하!");
+            notification.put("title", "제목");
+            root.put("notification", notification);
+            root.put("to", token);
+            // FMC 메시지 생성 end
+
+            Log.e(TAG, "sendPostToFCM: notification: " + notification );
+
+            URL Url = new URL("https://fcm.googleapis.com/fcm/send");
+            HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.addRequestProperty("Authorization", "key=" + "AAAA7pJGgbg:APA91bGoKVGCmJDJ1gPTVZ0ydjnCgpgt1v1NdIk3MalCeiv69VdbWRBx-Q7N6vAYob2WSmC6fkecJ3-SCeq5QqtVjVW7_ghsi8kQi2kRkNSTguJYzdNY6gaN8wDJsrRk5pvO4MaGkJfo");
+//            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-type", "application/json");
+            OutputStream os = conn.getOutputStream();
+            os.write(root.toString().getBytes("utf-8"));
+            os.flush();
+            conn.getResponseCode();
+
+            Log.e(TAG, "run: 전송완료");
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.e(TAG, "run: e: " + e);
+        }
+
+        // todo: 끝 _ 유저의 FCM 토큰 추가하기 (김성훈)
 
         // todo: 구글 지도 관련 설정
         mActivity = this;

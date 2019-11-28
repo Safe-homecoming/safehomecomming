@@ -18,6 +18,7 @@ public class Resultm {
     private String memtype;
     private String gender;
     private String wstatus;
+    private String token;
 
     //안심이가 수락한후에 select 내용 추가
     private String curaddress;
@@ -147,5 +148,15 @@ public class Resultm {
 
     public void setWstatus(String wstatus) {
         this.wstatus = wstatus;
+    }
+
+    public String getToken()
+    {
+        return token;
+    }
+
+    public void setToken(String token)
+    {
+        this.token = token;
     }
 }
