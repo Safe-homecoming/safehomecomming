@@ -11,7 +11,10 @@ public class Resultm {
     private  int result_row;
 
     // 회원 로그인시
+    private String memId;
+    private String phone;
     private String name;
+    private String age;
     private String memtype;
     private String gender;
     private String wstatus;
@@ -19,6 +22,30 @@ public class Resultm {
 
     // 시민 요청 현황 list  조회시
     private List<ItemRequest> items;// 안심이 수락 가능 현황list  하위
+
+    public String getMemId() {
+        return memId;
+    }
+
+    public void setMemId(String memId) {
+        this.memId = memId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
 
     public List<ItemRequest> getItems() {
         return items;

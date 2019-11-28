@@ -9,6 +9,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,8 +34,7 @@ public class Activity_Login extends AppCompatActivity
     private EditText textId, textPw;
     private String TAG = "Activity_Login";
 
-    public static String GET_USER_ID
-            ;
+    public static String GET_USER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -75,7 +75,7 @@ public class Activity_Login extends AppCompatActivity
 
                         String token = response.body().getToken();
 
-                        Log.e(TAG, "onResponse: token: " + token );
+                        Log.e(TAG, "onResponse: token: " + token);
 
                         if (response.body() != null)
                         {
@@ -94,9 +94,28 @@ public class Activity_Login extends AppCompatActivity
                                     startActivity(intent);
                                     finish();
                                 }
-                            } else
+
+                                //회원 기본정보 쉐어드에 저장하기
+                                SharedPreferences pref = getSharedPreferences("meminfo", MODE_PRIVATE);
+
+                                // SharedPreferences 의 데이터를 저장/편집 하기위해 Editor 변수를 선언한다.
+                                SharedPreferences.Editor editor = pref.edit();
+
+                                // key값에 value값을 저장한다.
+                                // String, boolean, int, float, long 값 모두 저장가능하다.
+                                editor.putString("memId", response.body().getMemId());
+                                editor.putString("phone", response.body().getPhone());
+                                editor.putString("gender", response.body().getGender());
+                                editor.putString("age", response.body().getAge());
+                                editor.putString("name", response.body().getName());
+                                editor.putString("memtype", response.body().getMemtype());
+                                editor.putString("wstatus", response.body().getWstatus());
+                                // 메모리에 있는 데이터를 저장장치에 저장한다.
+                                editor.commit();
+
+                            }
+                            else
                             {
-                                //실패0
                                 Toast.makeText(Activity_Login.this, "로그인이 실패하였습니다.", Toast.LENGTH_SHORT).show();
                             }
 
