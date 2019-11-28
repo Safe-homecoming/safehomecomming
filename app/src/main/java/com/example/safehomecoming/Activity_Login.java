@@ -34,7 +34,7 @@ public class Activity_Login extends AppCompatActivity
     private EditText textId, textPw;
     private String TAG = "Activity_Login";
 
-    public static String GET_USER_ID;
+    public static String GET_USER_ID; /// ㅁㄴㅇㅁㄴㅇ ㅁㄴㅇ ㅇㅁㄴㅇ ㅇ ㅁㄴㅇㅁㄴㅇㅁㄴㅇ
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
