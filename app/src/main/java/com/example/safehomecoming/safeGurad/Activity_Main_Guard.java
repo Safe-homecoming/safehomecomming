@@ -23,10 +23,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.safehomecoming.Activity_Citizeninfo;
 import com.example.safehomecoming.R;
 import com.example.safehomecoming.citizen.Activity_Main_Citizen;
 import com.example.safehomecoming.service.MyFirebaseInstanceIDService;
@@ -93,7 +96,10 @@ public class Activity_Main_Guard extends AppCompatActivity
     // 구글 맵 관련 변수 모음 끝
 
     // 레이아웃
-    private Button requstbtn;
+    private Button requstbtn , finishbtn , citizeninfobtn; // 매칭대기버튼, 귀가완료버튼,시민정보 버튼
+    private LinearLayout matchwait, matchok; // 매칭대기화면, 매칭완료화면
+    private ImageView phonebtn; // 요청자와 통화 버튼
+    private TextView leftdistance; // 요청자와의 남은거리
 
     private ImageView
             button_nav       //
@@ -109,13 +115,27 @@ public class Activity_Main_Guard extends AppCompatActivity
 
     boolean navIsOpen = false;
 
+    // getIntente 번수 선언
+    private String phone ,curaddress,peraddress,name,gender,reqgender;
+    private int leftkm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_guard);
 
-        requstbtn = (Button)findViewById(R.id.button_request_safe_guard); //매칭 대기 버튼
+        citizeninfobtn = (Button)findViewById(R.id.citizeninfo ); //요청자 정보 버튼
+        requstbtn = (Button)findViewById(R.id.button_request_safe_guard); //매칭 대기 하기 버튼
+        finishbtn = (Button)findViewById(R.id.finishbtn ); //귀가완료버튼
+
+        matchwait = (LinearLayout) findViewById(R.id.matchwait_lay); //매칭 대기하기 layout
+        matchok = (LinearLayout) findViewById(R.id.matchok_lay); //매칭 완료 후의 layout
+
+        phonebtn = (ImageView)findViewById(R.id.phonebtn);// 요청자에게 전화 걸기
+
+        leftdistance = (TextView)findViewById(R.id.textdistance);// 요청자와의 남은 거리
+
 
         // 네비게이션
         button_nav = findViewById(R.id.button_nav);
@@ -124,8 +144,62 @@ public class Activity_Main_Guard extends AppCompatActivity
         nav_boundary = findViewById(R.id.nav_boundary);
         nav_my_child = findViewById(R.id.nav_my_child);
         nav_cctv = findViewById(R.id.nav_cctv);
-        // View Find 끝
 
+
+
+
+        // getIntent
+        Intent  intent = getIntent(); // Activity_Guard_accpet.class
+        phone  = intent.getStringExtra("phone");
+        if( phone != null) { // 매칭 대기하기 화면
+            Log.d("**** DEBUG ***", "Intent OK");
+            leftkm = intent.getIntExtra("leftkm", 0); // 시민과 남아 있는 거리
+            phone = intent.getStringExtra("phone"); //요청자 핸드폰 번호
+
+            curaddress  = intent.getStringExtra("curaddress"); // 출발 지점
+            peraddress  = intent.getStringExtra("peraddress"); // 도착 지점
+            name  = intent.getStringExtra("name"); //요청자 이름
+            gender  = intent.getStringExtra("gender"); //요청자 성별
+            reqgender  = intent.getStringExtra("reqgender"); //요청성별
+
+
+            Log.d("**** DEBUG ***", "    "+curaddress);
+            Log.d("**** DEBUG ***", "    "+name);
+            Log.d("**** DEBUG ***", "    "+gender);
+
+            leftdistance.setText(leftkm+" m");
+            matchwait.setVisibility(View.INVISIBLE);
+            matchok.setVisibility(View.VISIBLE);
+            citizeninfobtn.setVisibility(View.VISIBLE);
+        }
+
+
+        // View Find 끝
+        //귀가 완료버튼
+        finishbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //귀가 완료 버튼 에서 update할것
+            }
+        });
+        // 요청자 정보 버튼
+        citizeninfobtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Activity_Main_Guard.this, Activity_Citizeninfo.class);
+                startActivity(intent);
+            }
+        });
+        // 전화 버튼
+        phonebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String tel = "tel:" + phone;
+                startActivity(new Intent("android.intent.action.DIAL", Uri.parse(tel)));
+
+            }
+        });
         //매칭 대기 버튼
         requstbtn.setOnClickListener(new View.OnClickListener() {
             @Override

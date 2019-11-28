@@ -21,20 +21,11 @@
             android:layout_weight="1"
             android:gravity="left|center"
             android:paddingHorizontal="15dp"
-            android:text="요 청 현 황"
+            android:text="요청자 정보"
             android:textColor="@color/black"
             android:textSize="20dp"/>
 
-    </LinearLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/swipe_layout">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F0F0F0"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
 </LinearLayout>
+
