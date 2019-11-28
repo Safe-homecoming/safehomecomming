@@ -15,11 +15,10 @@ public class Resultm {
     private String memtype;
     private String gender;
     private String wstatus;
+    private String token;
 
     // 시민 요청 현황 list  조회시
     private List<ItemRequest> items;// 안심이 수락 가능 현황list  하위
-
-
 
     public List<ItemRequest> getItems() {
         return items;
@@ -92,5 +91,15 @@ public class Resultm {
 
     public void setWstatus(String wstatus) {
         this.wstatus = wstatus;
+    }
+
+    public String getToken()
+    {
+        return token;
+    }
+
+    public void setToken(String token)
+    {
+        this.token = token;
     }
 }

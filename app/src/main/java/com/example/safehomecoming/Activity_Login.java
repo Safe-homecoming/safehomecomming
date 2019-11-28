@@ -3,6 +3,7 @@ package com.example.safehomecoming;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -10,6 +11,7 @@ import retrofit2.Response;
 import android.content.Intent;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,8 +29,12 @@ import java.util.HashMap;
 public class Activity_Login extends AppCompatActivity
 {
 
-  private Button loginbtn, singupbtn;
-  private EditText textId,textPw;
+    private Button loginbtn, singupbtn;
+    private EditText textId, textPw;
+    private String TAG = "Activity_Login";
+
+    public static String GET_USER_ID
+            ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,59 +47,71 @@ public class Activity_Login extends AppCompatActivity
         textId = findViewById(R.id.login_id);// id 입력
         textPw = findViewById(R.id.login_password);// pw 입력
 
-
         // 로그인 버튼  안심인지 시민인지 자동으로 여기서 구분
         loginbtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                HashMap<String,Object> input = new HashMap<>();
-                input.put("id",textId.getText().toString());
-                input.put("password",textPw.getText().toString());
-                input.put("title","this is title");
-                input.put("body","this is body");
+                HashMap<String, Object> input = new HashMap<>();
+                input.put("id", textId.getText().toString());
+                input.put("password", textPw.getText().toString());
+                input.put("title", "this is title");
+                input.put("body", "this is body");
+
+                GET_USER_ID = (String) input.get("id");
 
                 ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
                 Call<Resultm> call = apiInterface.logincheck(input);
 
-
-                call.enqueue(new Callback<Resultm>() {
+                call.enqueue(new Callback<Resultm>()
+                {
                     @Override
-                    public void onResponse(@NonNull Call<Resultm> call, Response<Resultm> response) {
+                    public void onResponse(@NonNull Call<Resultm> call, Response<Resultm> response)
+                    {
                         //정상 결과
-                        Resultm result= response.body();
+                        Resultm result = response.body();
                         String memtype = response.body().getMemtype();
-                        if(response.body() != null) {
-                            if(result.getResult().equals("ok")){
+
+                        String token = response.body().getToken();
+
+                        Log.e(TAG, "onResponse: token: " + token );
+
+                        if (response.body() != null)
+                        {
+                            if (result.getResult().equals("ok"))
+                            {
                                 /// 멤버 타입으로 시민인지 안심인지 구분하기
-                                if(memtype.equals("helper")){  //안심이
+                                if (memtype.equals("helper"))
+                                {  //안심이
                                     Intent intent = new Intent(Activity_Login.this, Activity_Main_Guard.class);
                                     startActivity(intent);
                                     finish();
-                                }else if(memtype.equals("citizen")){//시민일때
+                                } else if (memtype.equals("citizen"))
+                                {//시민일때
                                     Intent intent = new Intent(Activity_Login.this, Activity_Main_Citizen.class);
                                     //intent.putExtra("imageUri", uri);
                                     startActivity(intent);
                                     finish();
                                 }
-                            }else{
+                            } else
+                            {
                                 //실패0
-                                Toast.makeText(Activity_Login.this,"로그인이 실패하였습니다.",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Activity_Login.this, "로그인이 실패하였습니다.", Toast.LENGTH_SHORT).show();
                             }
 
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Resultm> call, Throwable t) {
+                    public void onFailure(Call<Resultm> call, Throwable t)
+                    {
                         //네트워크 문제
-                        Toast.makeText(Activity_Login.this,"네트워크 실패",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_Login.this, "네트워크 실패", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
-
 
 
     }

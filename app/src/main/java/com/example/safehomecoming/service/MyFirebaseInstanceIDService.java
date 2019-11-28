@@ -3,10 +3,13 @@ package com.example.safehomecoming.service;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -82,6 +85,29 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService
         sendNotification(remoteMessage);
     }
 
+    private void showNotification(String title, String message)
+    {
+        Log.e(TAG, "showNotification: " );
+/*        Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, notificationBuilder.build());*/
+    }
+
     /**
      * remoteMessage 메세지 안애 getData와 getNotification이 있습니다.
      * 이부분은 차후 테스트 날릴때 설명 드리겠습니다.
@@ -89,6 +115,7 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService
     private void sendNotification(RemoteMessage remoteMessage)
     {
         Log.e(TAG, "sendNotification: remoteMessage: " + remoteMessage);
+
 
 //        String title = remoteMessage.getData().get("title");
 //        String message = remoteMessage.getData().get("message");
