@@ -23,7 +23,7 @@ public class RecyclerAdapter_Accept_Guard extends RecyclerView.Adapter<RecyclerA
     //============================================================================================
     // EVENT 관련
     public interface Guard_viewClickListener{
-        void onAcceptClicked(View v, int position, int idx);
+        void onAcceptClicked(View v, int position, int idx, int leftkm);
     }
 
     private Guard_viewClickListener mListener = null;
@@ -96,7 +96,7 @@ public class RecyclerAdapter_Accept_Guard extends RecyclerView.Adapter<RecyclerA
                     int pos = getAdapterPosition();
                     if(pos != RecyclerView.NO_POSITION) {
                         if (mListener != null) {
-                            mListener.onAcceptClicked(v,pos, data.getIdx());
+                            mListener.onAcceptClicked(v,pos, data.getIdx(), data.getLeftKm());
                         }
                     }
                 }

@@ -19,9 +19,38 @@ public class Resultm {
     private String gender;
     private String wstatus;
 
+    //안심이가 수락한후에 select 내용 추가
+    private String curaddress;
+    private String peraddress;
+    private String reqgender;
+
     // 시민 요청 현황 list  조회시
     private List<ItemRequest> items;// 안심이 수락 가능 현황list  하위
 
+
+    public String getCuraddress() {
+        return curaddress;
+    }
+
+    public void setCuraddress(String curaddress) {
+        this.curaddress = curaddress;
+    }
+
+    public String getPeraddress() {
+        return peraddress;
+    }
+
+    public void setPeraddress(String peraddress) {
+        this.peraddress = peraddress;
+    }
+
+    public String getReqgender() {
+        return reqgender;
+    }
+
+    public void setReqgender(String reqgender) {
+        this.reqgender = reqgender;
+    }
 
     public String getMemId() {
         return memId;

@@ -37,18 +37,22 @@
             android:gravity="left|center"
             android:text="Safe Home Comming"
             android:textColor="@color/black"
-            android:textSize="20dp"/>
+            android:textSize="17sp"/>
 
 
-        <TextView
+        <Button
+            android:id="@+id/citizeninfo"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="left|center"
             android:paddingHorizontal="15dp"
-            android:text="(button)"
+            android:text="요청자 정보"
             android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:background="@drawable/item_edit_text_black"
+            android:textSize="17sp"
+            android:layout_margin="20px"
+            android:visibility="invisible"
+             />
 
     </LinearLayout>
 
@@ -64,20 +68,104 @@
         android:layout_width="match_parent"
         android:layout_height="0.1dp"/>
 
-    <Button
-        android:id="@+id/button_request_safe_guard"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="13dp"
         android:layout_weight="1"
-        android:layout_gravity="bottom|center"
-        android:background="@color/white"
-        android:paddingHorizontal="15dp"
-        android:text="매칭 대기 하기"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        />
+        android:layout_gravity="bottom|center">
+        <LinearLayout
+            android:id="@+id/matchwait_lay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_gravity="bottom|center"
+            android:background="@color/white"
+            >
+            <Button
+                android:id="@+id/button_request_safe_guard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="매칭 대기 하기"
+                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                android:textSize="20dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/matchok_lay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_gravity="bottom|center"
+            android:background="@color/white"
+            android:visibility="invisible"
+            >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="80px"
+                android:layout_weight="2"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginVertical="30px"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:text="시민과의 거리 : "
+                        android:layout_gravity="center"
+                        android:textColor="@android:color/background_dark"/>
+                    <TextView
+                        android:id="@+id/textdistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60px"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:text="200m"/>
+                    <ImageView
+                        android:id="@+id/phonebtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/call_32"
+                        android:background="@drawable/item_edit_text_black"
+                        android:padding="20px"
+                        android:layout_marginLeft="20px"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="10px"
+                android:background="@android:color/black"/>
+
+            <Button
+                android:id="@+id/finishbtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:text="귀가완료"/>
+
+
+        </LinearLayout>
+
+
+
+    </FrameLayout>
+
+
 
     <LinearLayout
         android:visibility="gone"

@@ -71,7 +71,6 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
         mSwipRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-
                     curLocation(); //현재 위치
                     init();
                     getData();  // 리사이클러뷰 에 data 넣어주기
@@ -99,6 +98,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
         }
         else{
             //가장최근의 위치정보를 가지고옵니다
+            //provider = location.getProvider(); // 위치 정보
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             provider = location.getProvider(); // 위치 정보
             longitude = location.getLongitude();  // 위도
@@ -163,7 +163,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
     //리사이클러뷰 수락 버튼 누른후
     // 수락 버튼 클릭후 match 상태 와 결과를 update 시켜줌
     @Override
-    public void onAcceptClicked(View v, int position, int idx) {
+    public void onAcceptClicked(View v, int position, int idx, final int leftkm) {
 
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<Resultm> call = apiInterface.reqeustaccept(idx);
@@ -180,8 +180,15 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
 
                         //성공
                         Intent intent = new Intent(Activity_Guard_accept.this,Activity_Main_Guard.class);
-//                        intent.putExtra("fragreplace", 2);
-                        startActivity(intent);
+                        intent.putExtra("leftkm", leftkm); // 시민과 남아 있는 거리
+                        intent.putExtra("curaddress", result.getCuraddress()); // 출발 지점
+                        intent.putExtra("peraddress", result.getPeraddress()); // 도착 지점
+                        intent.putExtra("phone",result.getPhone());//요청자 핸드폰 번호
+                        intent.putExtra("name",result.getName());//요청자 이름
+                        intent.putExtra("gender",result.getGender());//요청자 성별
+                        intent.putExtra("reqgender",result.getReqgender());//요청성별
+
+                         startActivity(intent);
                     } else if (result_code.equals("200")) {
                         //실패
                         Toast.makeText(Activity_Guard_accept.this, "완료  되지 않습니다 확인해주세요.", Toast.LENGTH_SHORT).show();
@@ -211,7 +218,6 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
         crntLocation.setLongitude(longitude); //위도
 
         //Log.i("TestLog" ,"   경도 :"+crntLocation.getLatitude()+"   위도"+crntLocation.getLongitude());
-
 
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<Resultm> call = apiInterface.requestinfo();
@@ -306,7 +312,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
             public void onFailure(Call<Resultm> call, Throwable t) {
                 //네트워크 문제
                 Toast.makeText(getApplicationContext(), "서비스 연결이 원활하지 않습니다", Toast.LENGTH_SHORT).show();
-                Log.e("메모 에러 발생 Log ", t.getMessage());
+                Log.e(" 에러 발생 Log ", t.getMessage());
             }
         });
 
