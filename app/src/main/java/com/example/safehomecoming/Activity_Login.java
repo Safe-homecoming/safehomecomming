@@ -72,7 +72,6 @@ public class Activity_Login extends AppCompatActivity
                         //정상 결과
                         Resultm result = response.body();
                         String memtype = response.body().getMemtype();
-
                         String token = response.body().getToken();
 
                         Log.e(TAG, "onResponse: token: " + token);
