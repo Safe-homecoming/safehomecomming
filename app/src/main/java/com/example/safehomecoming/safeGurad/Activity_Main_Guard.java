@@ -223,6 +223,15 @@ public class Activity_Main_Guard extends AppCompatActivity
             }
         });
 
+        // 경계 모드 화면으로
+        nav_boundary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Activity_Main_Guard.this, Emergency_Mode.class);
+                startActivity(intent);
+            }
+        });
+
         //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
