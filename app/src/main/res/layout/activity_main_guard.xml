@@ -241,6 +241,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/eme_mode"
                 android:src="@drawable/ic_children"
                 android:layout_width="50dp"
                 android:layout_height="50dp" />

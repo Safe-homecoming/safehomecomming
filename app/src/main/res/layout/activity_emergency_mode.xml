@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:id="@+id/L_layout"
+    android:background="@android:color/holo_red_dark"
+    tools:context=".Emergency_Mode">
+
+    <LinearLayout
+        android:id="@+id/mode_onoff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center|center_vertical"
+        android:padding="30px"
+        android:background="@drawable/item_edit_text_black">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:src="@drawable/house"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="경계 모드"
+        android:layout_gravity="center_vertical|center"
+        android:textStyle="bold"
+        android:textSize="30sp"/>
+    </LinearLayout>
+</LinearLayout>

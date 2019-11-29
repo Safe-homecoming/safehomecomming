@@ -30,7 +30,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.safehomecoming.Activity_Citizeninfo;
+import com.example.safehomecoming.Emergency_Mode;
 import com.example.safehomecoming.R;
+import com.example.safehomecoming.ScreenService;
 import com.example.safehomecoming.citizen.Activity_Main_Citizen;
 import com.example.safehomecoming.service.MyFirebaseInstanceIDService;
 import com.example.safehomecoming.service.addFCMToken;
@@ -98,7 +100,7 @@ public class Activity_Main_Guard extends AppCompatActivity
     // 레이아웃
     private Button requstbtn , finishbtn , citizeninfobtn; // 매칭대기버튼, 귀가완료버튼,시민정보 버튼
     private LinearLayout matchwait, matchok; // 매칭대기화면, 매칭완료화면
-    private ImageView phonebtn; // 요청자와 통화 버튼
+    private ImageView phonebtn,eme_mode; // 요청자와 통화 버튼
     private TextView leftdistance; // 요청자와의 남은거리
 
     private ImageView
@@ -210,12 +212,19 @@ public class Activity_Main_Guard extends AppCompatActivity
             }
         });
 
+        nav_boundary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Activity_Main_Guard.this, Emergency_Mode.class);
+                startActivity(intent);
+            }
+        });
         //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
-        startService(intent);
+//        Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
+//        startService(intent);
 
         // todo: 유저의 FCM 토큰 추가하기 (김성훈)
         addFCMToken addFCMToken = new addFCMToken();
