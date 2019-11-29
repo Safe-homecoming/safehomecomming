@@ -196,6 +196,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
                         intent.putExtra("reqgender",result.getReqgender());//요청성별
                         intent.putExtra("idx",idx);// 요청 index 값
                          startActivity(intent);
+                         finish();
                     } else if (result_code.equals("200")) {
                         //실패
                         Toast.makeText(Activity_Guard_accept.this, "완료  되지 않습니다 확인해주세요.", Toast.LENGTH_SHORT).show();

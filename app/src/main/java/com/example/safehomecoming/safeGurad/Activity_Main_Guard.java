@@ -256,6 +256,20 @@ public class Activity_Main_Guard extends AppCompatActivity
                 startActivity(intent);
             }
         });
+        //귀가 완료 버튼 메인화면으로 전환
+        finishbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishsuccess(curidx); // 귀가 버튼 상태 업뎃 false에서 true
+                finish();
+                matchwait.setVisibility(View.VISIBLE);
+                matchok.setVisibility(View.INVISIBLE);
+                citizeninfobtn.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(Activity_Main_Guard.this, Activity_Main_Guard.class);
+                startActivity(intent);
+
+            }
+        });
         //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
