@@ -118,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="17sp"
-                        android:text="시민과의 거리 : "
+                        android:text="남은 귀가 거리 : "
                         android:layout_gravity="center"
                         android:textColor="@android:color/background_dark"/>
                     <TextView
