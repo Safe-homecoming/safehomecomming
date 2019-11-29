@@ -182,6 +182,7 @@ public class Activity_safeGuard_Call_Request extends AppCompatActivity
             {
                 Intent intent = new Intent(Activity_safeGuard_Call_Request.this, Activity_Wait_for_request_guard_response.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
