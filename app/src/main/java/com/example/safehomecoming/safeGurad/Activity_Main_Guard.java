@@ -131,7 +131,7 @@ public class Activity_Main_Guard extends AppCompatActivity
 
     // getIntente 번수 선언
     private String phone, curaddress, peraddress, name, gender, reqgender;
-    private int leftkm;
+    private int leftkm, curidx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -165,6 +165,9 @@ public class Activity_Main_Guard extends AppCompatActivity
         if (phone != null)
         { // 매칭 대기하기 화면
             Log.d("**** DEBUG ***", "Intent OK");
+
+
+            curidx = intent.getIntExtra("idx", 0); //요청idx
             leftkm = intent.getIntExtra("leftkm", 0); // 시민과 남아 있는 거리
             phone = intent.getStringExtra("phone"); //요청자 핸드폰 번호
 
@@ -246,6 +249,20 @@ public class Activity_Main_Guard extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent = new Intent(Activity_Main_Guard.this, WorkCheck.class);
                 startActivity(intent);
+            }
+        });
+        //귀가 완료 버튼 메인화면으로 전환
+        finishbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishsuccess(curidx); // 귀가 버튼 상태 업뎃 false에서 true
+                finish();
+                matchwait.setVisibility(View.VISIBLE);
+                matchok.setVisibility(View.INVISIBLE);
+                citizeninfobtn.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(Activity_Main_Guard.this, Activity_Main_Guard.class);
+                startActivity(intent);
+
             }
         });
         //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -352,6 +369,46 @@ public class Activity_Main_Guard extends AppCompatActivity
 
     }
 
+    // 안심이 귀가 완료 버튼
+    private  void finishsuccess(int idx){
+
+
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<Resultm> call = apiInterface.finishsuccess(idx);
+
+        call.enqueue(new Callback<Resultm>() {
+            @Override
+            public void onResponse(Call<Resultm> call, Response<Resultm> response) {
+
+                //정상 결과
+                Resultm result = response.body();
+                String result_code = response.body().getResult_code();
+                int result_row = response.body().getResult_row();
+
+                if (response.body() != null) {
+                    // if (result.getResult().equals("ok")) {
+                    if (result_code.equals("100")) {
+                        Log.i("Main_Guard", "헬퍼 귀가 완료  ");
+
+                    } else if (result_code.equals("200")) {
+                        //실패
+                        Toast.makeText(getApplicationContext(), "불러오기 실패하였습니다. 확인 부탁드립니다.", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Resultm> call, Throwable t) {
+                //네트워크 문제
+                Toast.makeText(getApplicationContext(), "서비스 연결이 원활하지 않습니다", Toast.LENGTH_SHORT).show();
+                Log.e(" 에러 발생 Log ", t.getMessage());
+            }
+        });
+    }
+
+    //안심이 현재 위치 update
     private  void locationupdate(String latitude, String longitude){
         //Log.i("TestLog" ,"   경도 :"+crntLocation.getLatitude()+"   위도"+crntLocation.getLongitude());
 

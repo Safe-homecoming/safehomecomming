@@ -46,6 +46,10 @@ public interface ApiInterface
     // 안심이 위치  update
     @GET("helper_location_update.php")
     Call<Resultm> hlocationupdate(@Query("memid") String memid , @Query("latitude") String  latitude, @Query("longitude") String  longitude);
+
+    //안심이 귀가 완료 버튼
+    @GET("helperfinish.php")
+    Call<Resultm> finishsuccess(@Query("idx") int idx);
 }
 
 

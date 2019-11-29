@@ -170,7 +170,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
     //리사이클러뷰 수락 버튼 누른후
     // 수락 버튼 클릭후 match 상태 와 결과를 update 시켜줌
     @Override
-    public void onAcceptClicked(View v, int position, int idx, final int leftkm) {
+    public void onAcceptClicked(View v, int position, final int idx, final int leftkm) {
 
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<Resultm> call = apiInterface.reqeustaccept(idx);
@@ -194,7 +194,7 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
                         intent.putExtra("name",result.getName());//요청자 이름
                         intent.putExtra("gender",result.getGender());//요청자 성별
                         intent.putExtra("reqgender",result.getReqgender());//요청성별
-
+                        intent.putExtra("idx",idx);// 요청 index 값
                          startActivity(intent);
                     } else if (result_code.equals("200")) {
                         //실패
