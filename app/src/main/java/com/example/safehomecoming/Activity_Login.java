@@ -34,7 +34,9 @@ public class Activity_Login extends AppCompatActivity
     private EditText textId, textPw;
     private String TAG = "Activity_Login";
 
-    public static String GET_USER_ID; /// ㅁㄴㅇㅁㄴㅇ ㅁㄴㅇ ㅇㅁㄴㅇ ㅇ ㅁㄴㅇㅁㄴㅇㅁㄴㅇ
+    public static String GET_USER_ID // id
+            ,           GET_TOKEN
+            ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,9 +74,9 @@ public class Activity_Login extends AppCompatActivity
                         //정상 결과
                         Resultm result = response.body();
                         String memtype = response.body().getMemtype();
-                        String token = response.body().getToken();
+                        GET_TOKEN = response.body().getToken();
 
-                        Log.e(TAG, "onResponse: token: " + token);
+                        Log.e(TAG, "onResponse: token: " + GET_TOKEN);
 
                         if (response.body() != null)
                         {
@@ -109,6 +111,7 @@ public class Activity_Login extends AppCompatActivity
                                 editor.putString("name", response.body().getName());
                                 editor.putString("memtype", response.body().getMemtype());
                                 editor.putString("wstatus", response.body().getWstatus());
+                                editor.putString("token", response.body().getToken());
                                 // 메모리에 있는 데이터를 저장장치에 저장한다.
                                 editor.commit();
 

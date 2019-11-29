@@ -58,6 +58,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
+import static com.example.safehomecoming.Activity_Login.GET_TOKEN;
+import static com.example.safehomecoming.Activity_Login.GET_USER_ID;
+
 public class Activity_Main_Guard extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -96,7 +99,7 @@ public class Activity_Main_Guard extends AppCompatActivity
     // 구글 맵 관련 변수 모음 끝
 
     // 레이아웃
-    private Button requstbtn , finishbtn , citizeninfobtn; // 매칭대기버튼, 귀가완료버튼,시민정보 버튼
+    private Button requstbtn, finishbtn, citizeninfobtn; // 매칭대기버튼, 귀가완료버튼,시민정보 버튼
     private LinearLayout matchwait, matchok; // 매칭대기화면, 매칭완료화면
     private ImageView phonebtn; // 요청자와 통화 버튼
     private TextView leftdistance; // 요청자와의 남은거리
@@ -107,16 +110,16 @@ public class Activity_Main_Guard extends AppCompatActivity
 
     private LinearLayout
             nav_area            // 네비게이션 영역
-            ,   nav_mypage      // 네이게이션 버튼_마이페이지
-            ,   nav_boundary    // 네이게이션 버튼_경계모드
-            ,   nav_my_child    // 네이게이션 버튼_미아찾기
-            ,   nav_cctv        // 네이게이션 버튼_CCTV
+            , nav_mypage      // 네이게이션 버튼_마이페이지
+            , nav_boundary    // 네이게이션 버튼_경계모드
+            , nav_my_child    // 네이게이션 버튼_미아찾기
+            , nav_cctv        // 네이게이션 버튼_CCTV
             ;
 
     boolean navIsOpen = false;
 
     // getIntente 번수 선언
-    private String phone ,curaddress,peraddress,name,gender,reqgender;
+    private String phone, curaddress, peraddress, name, gender, reqgender;
     private int leftkm;
 
     @Override
@@ -125,16 +128,16 @@ public class Activity_Main_Guard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_guard);
 
-        citizeninfobtn = (Button)findViewById(R.id.citizeninfo ); //요청자 정보 버튼
-        requstbtn = (Button)findViewById(R.id.button_request_safe_guard); //매칭 대기 하기 버튼
-        finishbtn = (Button)findViewById(R.id.finishbtn ); //귀가완료버튼
+        citizeninfobtn = (Button) findViewById(R.id.citizeninfo); //요청자 정보 버튼
+        requstbtn = (Button) findViewById(R.id.button_request_safe_guard); //매칭 대기 하기 버튼
+        finishbtn = (Button) findViewById(R.id.finishbtn); //귀가완료버튼
 
         matchwait = (LinearLayout) findViewById(R.id.matchwait_lay); //매칭 대기하기 layout
         matchok = (LinearLayout) findViewById(R.id.matchok_lay); //매칭 완료 후의 layout
 
-        phonebtn = (ImageView)findViewById(R.id.phonebtn);// 요청자에게 전화 걸기
+        phonebtn = (ImageView) findViewById(R.id.phonebtn);// 요청자에게 전화 걸기
 
-        leftdistance = (TextView)findViewById(R.id.textdistance);// 요청자와의 남은 거리
+        leftdistance = (TextView) findViewById(R.id.textdistance);// 요청자와의 남은 거리
 
 
         // 네비게이션
@@ -145,65 +148,73 @@ public class Activity_Main_Guard extends AppCompatActivity
         nav_my_child = findViewById(R.id.nav_my_child);
         nav_cctv = findViewById(R.id.nav_cctv);
 
-
-
-
         // getIntent
-        Intent  intent = getIntent(); // Activity_Guard_accpet.class
-        phone  = intent.getStringExtra("phone");
-        if( phone != null) { // 매칭 대기하기 화면
+        Intent intent = getIntent(); // Activity_Guard_accpet.class
+        phone = intent.getStringExtra("phone");
+        if (phone != null)
+        { // 매칭 대기하기 화면
             Log.d("**** DEBUG ***", "Intent OK");
             leftkm = intent.getIntExtra("leftkm", 0); // 시민과 남아 있는 거리
             phone = intent.getStringExtra("phone"); //요청자 핸드폰 번호
 
-            curaddress  = intent.getStringExtra("curaddress"); // 출발 지점
-            peraddress  = intent.getStringExtra("peraddress"); // 도착 지점
-            name  = intent.getStringExtra("name"); //요청자 이름
-            gender  = intent.getStringExtra("gender"); //요청자 성별
-            reqgender  = intent.getStringExtra("reqgender"); //요청성별
+            curaddress = intent.getStringExtra("curaddress"); // 출발 지점
+            peraddress = intent.getStringExtra("peraddress"); // 도착 지점
+            name = intent.getStringExtra("name"); //요청자 이름
+            gender = intent.getStringExtra("gender"); //요청자 성별
+            reqgender = intent.getStringExtra("reqgender"); //요청성별
 
 
-            Log.d("**** DEBUG ***", "    "+curaddress);
-            Log.d("**** DEBUG ***", "    "+name);
-            Log.d("**** DEBUG ***", "    "+gender);
+            Log.d("**** DEBUG ***", "    " + curaddress);
+            Log.d("**** DEBUG ***", "    " + name);
+            Log.d("**** DEBUG ***", "    " + gender);
 
-            leftdistance.setText(leftkm+" m");
+            leftdistance.setText(leftkm + " m");
             matchwait.setVisibility(View.INVISIBLE);
             matchok.setVisibility(View.VISIBLE);
             citizeninfobtn.setVisibility(View.VISIBLE);
         }
 
-
         // View Find 끝
         //귀가 완료버튼
-        finishbtn.setOnClickListener(new View.OnClickListener() {
+        finishbtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 //귀가 완료 버튼 에서 update할것
             }
         });
+
         // 요청자 정보 버튼
-        citizeninfobtn.setOnClickListener(new View.OnClickListener() {
+        citizeninfobtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 Intent intent = new Intent(Activity_Main_Guard.this, Activity_Citizeninfo.class);
                 startActivity(intent);
             }
         });
+
         // 전화 버튼
-        phonebtn.setOnClickListener(new View.OnClickListener() {
+        phonebtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
 
                 String tel = "tel:" + phone;
                 startActivity(new Intent("android.intent.action.DIAL", Uri.parse(tel)));
 
             }
         });
+
         //매칭 대기 버튼
-        requstbtn.setOnClickListener(new View.OnClickListener() {
+        requstbtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // 도우미 요청 현황으로 이동
                 Intent intent = new Intent(Activity_Main_Guard.this, Activity_Guard_accept.class);
                 startActivity(intent);
@@ -214,16 +225,14 @@ public class Activity_Main_Guard extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
-        startService(intent);
+        Intent intentt = new Intent(this, MyFirebaseInstanceIDService.class);
+        startService(intentt);
 
         // todo: 유저의 FCM 토큰 추가하기 (김성훈)
         addFCMToken addFCMToken = new addFCMToken();
-        addFCMToken.addFCM_Token("dd", Activity_Main_Guard.this);
-
+        addFCMToken.addFCM_Token(GET_USER_ID, Activity_Main_Guard.this);
         String token = "eBo4JYXx1QY:APA91bHYSZz02itI_17dBAVMs7Ul1ib-pEfs5pSIrPfoNveDG8OUaFd81bVLXeuNdqbTR6vZUuQe4apHzaXwuvIYp4Lh0W2CDUHLydk6UhT9zaNj0MJYC6AI4oQ5AkUKgll1E5yi9CiN";
-        addFCMToken.sendPostToFCM(token,"제목","됬다!!! 하하!");
-
+//        addFCMToken.sendPostToFCM(token,"제목","됬다!!! 하하!");
         try
         {
             // FMC 메시지 생성 start
@@ -232,10 +241,10 @@ public class Activity_Main_Guard extends AppCompatActivity
             notification.put("body", "됬다!!! 하하!");
             notification.put("title", "제목");
             root.put("notification", notification);
-            root.put("to", token);
+            root.put("to", GET_TOKEN);
             // FMC 메시지 생성 end
 
-            Log.e(TAG, "sendPostToFCM: notification: " + notification );
+            Log.e(TAG, "sendPostToFCM: notification: " + notification);
 
             URL Url = new URL("https://fcm.googleapis.com/fcm/send");
             HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
@@ -280,16 +289,14 @@ public class Activity_Main_Guard extends AppCompatActivity
 //            button_nav.setImageResource(R.drawable.ic_nav_cancel);
             button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
 //            button_nav.setBackground(getDrawable(R.drawable.ic_nav_cancel));
-            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen);
             navIsOpen = false;
-        }
-
-        else
+        } else
         {
 //            button_nav.setImageResource(R.drawable.ic_nav_open);
             button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
 //            button_nav.setBackground(getDrawable(R.drawable.ic_nav_open));
-            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen );
+            Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen);
             navIsOpen = true;
         }
 
@@ -302,15 +309,13 @@ public class Activity_Main_Guard extends AppCompatActivity
                 if (navIsOpen)
                 {
                     button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
-                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen);
                     nav_area.setVisibility(View.GONE);
                     navIsOpen = false;
-                }
-
-                else
+                } else
                 {
                     button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
-                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen );
+                    Log.e(TAG, "onCreate: button_nav navIsOpen: " + navIsOpen);
                     nav_area.setVisibility(View.VISIBLE);
                     navIsOpen = true;
                 }
@@ -379,6 +384,7 @@ public class Activity_Main_Guard extends AppCompatActivity
             }
         });
     }
+
     //안드로이드 GPS 권한 체크
     private void startLocationUpdates()
     {

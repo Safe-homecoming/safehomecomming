@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.example.safehomecoming.Activity_Login.GET_USER_ID;
 import static com.example.safehomecoming.citizen.Activity_Main_Citizen.GET_CURRENT_CITIZEN_PATH;
 import static com.example.safehomecoming.citizen.Activity_safeGuard_Call_Request.GET_SELECT_DESTINATION;
 import static com.example.safehomecoming.citizen.Activity_safeGuard_Call_Request.GET_SELECT_GUARD_GENDER;
@@ -136,12 +137,7 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                // todo: 매칭 성공 액티비티로 이동 (임시)
-                Intent intent = new Intent(
-                        Activity_Wait_for_request_guard_response.this,
-                        Activity_success_guard_request.class);
-
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -182,10 +178,9 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
                             TIMEOUT = 31000; // 30초
 
                             tempTask();
-                        }
-                        else
+                        } else
                         {
-                            Log.e(TAG, "onResponse: php 측에서 문제 발생" );
+                            Log.e(TAG, "onResponse: php 측에서 문제 발생");
                         }
                     }
                 },
@@ -272,8 +267,7 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
                                     endLatFilter[0],
                                     endLatFilter[1],
                                     GET_SELECT_GUARD_GENDER,
-                                    "user1");
-
+                                    GET_USER_ID);
                         }
 
                         // todo: 조회됨 && 일치하는 성별 없음
@@ -306,7 +300,7 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
                                                             endLatFilter[0],
                                                             endLatFilter[1],
                                                             "anyone",
-                                                            "user1");
+                                                            GET_USER_ID);
                                                 }
                                             })
                                     .setNegativeButton("아니요",
@@ -404,11 +398,71 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
                                     Activity_fail_request_guard.class);
                             startActivity(intent);
                             finish();
-                        }
-
-                        else
+                        } else
                         {
-                            Log.e(TAG, "updateMatchFail onResponse: php 측에서 문제 발생" );
+                            Log.e(TAG, "updateMatchFail onResponse: php 측에서 문제 발생");
+                        }
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Log.e("VolleyError", "에러: " + error.toString());
+                    }
+                })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError
+            {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("userId", userId);
+
+                return params;
+            }
+        };
+
+        // requestQueue로 로그인 결과값 요청을 시작한다.
+        RequestQueue requestQueue = Volley.newRequestQueue(Activity_Wait_for_request_guard_response.this);
+
+        // stringRequest메소드에 기록한 내용들로 requestQueue를 시작한다.
+        requestQueue.add(stringRequest);
+    }
+
+    // todo: 매칭 수락한 유저 조회하기
+    private void getMatchResult(final String userId)
+    {
+        Log.e(TAG, "getMatchResult(): 매칭 수락한 유저 조회하기");
+
+        StringRequest stringRequest
+                = new StringRequest(Request.Method.POST,
+                "http://ec2-13-125-121-5.ap-northeast-2.compute.amazonaws.com/correcthelper.php",
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        Log.e(TAG, "updateMatchFail onResponse: " + response.trim());
+
+                        if (response.trim().equals("ok")) // 누군가 매칭 되었을 때
+                        {
+                            // 매칭 성공 화면으로 이동하기
+                            // todo: 매칭 성공 액티비티로 이동 (임시)
+                            Log.e(TAG, "onResponse: 매칭 성공! 안심이가 응답했습니다 ");
+
+                            Intent intent = new Intent(
+                                    Activity_Wait_for_request_guard_response.this,
+                                    Activity_success_guard_request.class);
+
+                            startActivity(intent);
+
+                            finish();
+                        } else
+                        {
+                            // 아직 매칭 안 됨
+                            Log.e(TAG, "onResponse: 아직 안심이의 응답 없음: ");
                         }
                     }
                 },
@@ -551,12 +605,41 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
                 // 타이머 용도가 'waitForHelperRequest'라면 안심이의 응답 대기하기 (00초간)
                 else if (timerType.equals("waitForHelperRequest"))
                 {
-                    // todo: 10초간 도우미가 응답 없으면 매칭 실패 화면으로 이동
-                    if (Integer.parseInt(text) == 10)
+
+/*                    if (Integer.parseInt(text) == 3)
+                    {
+                        // todo: 매칭 결과 조회하기
+                        getMatchResult(GET_USER_ID);
+                    }*/
+
+                    if (Integer.parseInt(text) == 6)
+                    {
+                        // todo: 매칭 결과 조회하기
+                        getMatchResult(GET_USER_ID);
+                    } else if (Integer.parseInt(text) == 9)
+                    {
+                        // todo: 매칭 결과 조회하기
+                        getMatchResult(GET_USER_ID);
+                    } else if (Integer.parseInt(text) == 12)
+                    {
+                        // todo: 매칭 결과 조회하기
+                        getMatchResult(GET_USER_ID);
+                    } else if (Integer.parseInt(text) == 15)
+                    {
+                        // todo: 매칭 결과 조회하기
+                        getMatchResult(GET_USER_ID);
+                    } else if (Integer.parseInt(text) == 18)
+                    {
+                        // todo: 매칭 결과 조회하기
+                        getMatchResult(GET_USER_ID);
+                    }
+
+                    // todo: 20초간 도우미가 응답 없으면 매칭 실패 화면으로 이동
+                    else if (Integer.parseInt(text) == 20)
                     {
                         GET_FAIL_MESSAGE = "응답을 받지 못 했습니다\n\n안심이가 모두 바쁜 가봐요 :(";
                         // 매칭 실패 처리하기
-                        updateMatchFail("user1");
+                        updateMatchFail(GET_USER_ID);
                     }
                 }
             }
