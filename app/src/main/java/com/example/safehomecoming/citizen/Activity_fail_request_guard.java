@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.safehomecoming.Emergency_Mode;
 import com.example.safehomecoming.R;
 
 import static com.example.safehomecoming.citizen.Activity_Wait_for_request_guard_response.GET_FAIL_MESSAGE;
@@ -58,13 +59,15 @@ public class Activity_fail_request_guard extends AppCompatActivity
             }
         });
 
-        // todo: 경계모드 활성화
+        // 경계모드로 넘어가기
         button_protected.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
+                Intent intent = new Intent(Activity_fail_request_guard.this, Emergency_Mode.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

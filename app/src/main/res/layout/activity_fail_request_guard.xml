@@ -48,9 +48,10 @@
             android:layout_marginTop="35dp"
             android:background="@drawable/item_edit_text_black"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="33dp"
             android:paddingHorizontal="15dp"
-            android:text="홀로 귀가\n\n(경계모드 활성화)"
+            android:layout_margin="50px"
+            android:text="홀로 귀가\n\n(경계모드)"
             android:textColor="@color/black"
             android:textSize="18.5dp" />
 

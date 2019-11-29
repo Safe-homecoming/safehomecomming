@@ -25,6 +25,10 @@ public class Resultm {
     private String peraddress;
     private String reqgender;
 
+
+
+
+
     // 시민 요청 현황 list  조회시
     private List<ItemRequest> items;// 안심이 수락 가능 현황list  하위
 

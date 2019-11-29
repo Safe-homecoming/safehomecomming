@@ -24,9 +24,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver
-            android:name=".ScreenReceiver"></receiver>
-        <service android:name=".ScreenService"></service>
+        <activity android:name=".WorkCheck"></activity>
+
+        <receiver android:name=".ScreenReceiver" />
+
+        <service android:name=".ScreenService" />
+
         <activity android:name=".Emergency_Mode" />
         <activity android:name=".Activity_Citizeninfo" />
         <activity android:name=".Activity_CCTV" />

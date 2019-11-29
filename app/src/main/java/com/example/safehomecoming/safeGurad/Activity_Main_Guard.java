@@ -5,11 +5,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -33,7 +37,11 @@ import com.example.safehomecoming.Activity_Citizeninfo;
 import com.example.safehomecoming.Emergency_Mode;
 import com.example.safehomecoming.R;
 import com.example.safehomecoming.ScreenService;
+import com.example.safehomecoming.WorkCheck;
 import com.example.safehomecoming.citizen.Activity_Main_Citizen;
+import com.example.safehomecoming.retrifit_setup.ApiClient;
+import com.example.safehomecoming.retrifit_setup.ApiInterface;
+import com.example.safehomecoming.retrifit_setup.Resultm;
 import com.example.safehomecoming.service.MyFirebaseInstanceIDService;
 import com.example.safehomecoming.service.addFCMToken;
 import com.google.android.gms.common.ConnectionResult;
@@ -57,6 +65,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -231,7 +240,14 @@ public class Activity_Main_Guard extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
+        //안심이 출근 하기
+        nav_mypage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Activity_Main_Guard.this, WorkCheck.class);
+                startActivity(intent);
+            }
+        });
         //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -335,6 +351,55 @@ public class Activity_Main_Guard extends AppCompatActivity
 
 
     }
+
+    private  void locationupdate(String latitude, String longitude){
+        //Log.i("TestLog" ,"   경도 :"+crntLocation.getLatitude()+"   위도"+crntLocation.getLongitude());
+
+        // 저장했을때와 같은 key로 xml에 접근한다.
+        SharedPreferences pref = getSharedPreferences("meminfo", MODE_PRIVATE);
+
+        // key에 해당한 value를 불러온다.
+        // 두번째 매개변수는 , key에 해당하는 value값이 없을 때에는 이 값으로 대체한다.
+        String resultId = pref.getString("memId", "");
+
+
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<Resultm> call = apiInterface.hlocationupdate(resultId,latitude ,longitude);
+
+        call.enqueue(new Callback<Resultm>() {
+            @Override
+            public void onResponse(Call<Resultm> call, Response<Resultm> response) {
+
+                //정상 결과
+                Resultm result = response.body();
+                String result_code = response.body().getResult_code();
+                int result_row = response.body().getResult_row();
+
+                if (response.body() != null) {
+                    // if (result.getResult().equals("ok")) {
+                    if (result_code.equals("100")) {
+                        Log.i("Main_Guard", "헬퍼 현재 상태 업데이트 완료 ");
+
+                    } else if (result_code.equals("200")) {
+                        //실패
+                        Toast.makeText(getApplicationContext(), "불러오기 실패하였습니다. 확인 부탁드립니다.", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Resultm> call, Throwable t) {
+                //네트워크 문제
+                Toast.makeText(getApplicationContext(), "서비스 연결이 원활하지 않습니다", Toast.LENGTH_SHORT).show();
+                Log.e(" 에러 발생 Log ", t.getMessage());
+            }
+        });
+    }
+
+
+
 
     // todo: 아래부터 전부 구글 지도 관련 메소드 (코드 분석 필요합니다)
     @Override
@@ -601,6 +666,8 @@ public class Activity_Main_Guard extends AppCompatActivity
             Log.e(TAG, "getCurrentAddress: address latitude 위도: " + address.getLatitude());
             Log.e(TAG, "getCurrentAddress: address longitude 경도: " + address.getLongitude());
 
+
+            locationupdate( Double.toString(address.getLatitude()), Double.toString(address.getLongitude()));
             return address.getAddressLine(0).toString();
         }
 

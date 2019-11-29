@@ -28,7 +28,7 @@ public interface ApiInterface
 
     // 안심이 신청 현황 내용
     @GET("requstcitizen.php")
-    Call<Resultm> requestinfo();
+    Call<Resultm> requestinfo(@Query("gender") String  gender);
 
     // 안심이가 수락 했을때 update
     @GET("helper_accpet_update.php")
@@ -38,6 +38,14 @@ public interface ApiInterface
     @FormUrlEncoded
     @POST("memberchek.php")
     Call<Resultm> logincheck(@FieldMap HashMap<String, Object> param);
+
+    // 안심이 출퇴근 체크 update
+    @GET("wstatus_update.php")
+    Call<Resultm> wupdate(@Query("memid") String memid , @Query("wstatus") String  wstatus);
+
+    // 안심이 위치  update
+    @GET("helper_location_update.php")
+    Call<Resultm> hlocationupdate(@Query("memid") String memid , @Query("latitude") String  latitude, @Query("longitude") String  longitude);
 }
 
 

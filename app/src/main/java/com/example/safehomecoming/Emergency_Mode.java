@@ -20,11 +20,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-
-
-
-
-
 public class Emergency_Mode extends AppCompatActivity {
 
     int cnt = 0; // 볼륨 버튼 클릭 횟수 확인
@@ -120,6 +115,7 @@ public class Emergency_Mode extends AppCompatActivity {
     }
 
 
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -145,6 +141,9 @@ public class Emergency_Mode extends AppCompatActivity {
                         EmEmode();
                     }
                 }
+                break;
+            case KeyEvent.KEYCODE_BACK:
+                finish();
                 break;
         }
         return true;

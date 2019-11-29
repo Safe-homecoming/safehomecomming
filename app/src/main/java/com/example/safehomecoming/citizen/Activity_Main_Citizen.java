@@ -37,6 +37,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.safehomecoming.Activity_CCTV;
+import com.example.safehomecoming.Emergency_Mode;
 import com.example.safehomecoming.R;
 import com.example.safehomecoming.service.MyFirebaseMessagingService;
 import com.example.safehomecoming.service.addFCMToken;
@@ -250,6 +251,14 @@ public class Activity_Main_Citizen extends AppCompatActivity
             }
         });
 
+        //경계 모드로
+        nav_boundary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Activity_Main_Citizen.this, Emergency_Mode.class);
+                startActivity(intent);
+            }
+        });
         // FCM 전송 테스트
         button_my_guard_info.setOnClickListener(new View.OnClickListener()
         {

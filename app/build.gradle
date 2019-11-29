@@ -62,5 +62,9 @@ dependencies {
     // J soup
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.google.firebase:firebase-database:19.2.0'
+
+
+    implementation 'com.kyleduo.switchbutton:library:2.0.0'
+
 }
 apply plugin: 'com.google.gms.google-services'

@@ -3,6 +3,7 @@ package com.example.safehomecoming.safeGurad;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -100,24 +101,30 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
             //가장최근의 위치정보를 가지고옵니다
             //provider = location.getProvider(); // 위치 정보
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            provider = location.getProvider(); // 위치 정보
-            longitude = location.getLongitude();  // 위도
-            latitude = location.getLatitude(); // 경도
-            altitude = location.getAltitude(); // 고도
-            Log.i("Activity_Guard_test","위치정보 : " + provider + "\n" +
-                    "위도 : " + longitude + "\n" +
-                    "경도 : " + latitude + "\n" +
-                    "고도  : " + altitude);
+            if (location != null) {
+                provider = location.getProvider(); // 위치 정보
+                longitude = location.getLongitude();  // 위도
+                latitude = location.getLatitude(); // 경도
+                altitude = location.getAltitude(); // 고도
+                Log.i("Activity_Guard_test", "위치정보 : " + provider + "\n" +
+                        "위도 : " + longitude + "\n" +
+                        "경도 : " + latitude + "\n" +
+                        "고도  : " + altitude);
 
 
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        1000,
+                        1,
+                        gpsLocationListener);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                        1000,
+                        1,
+                        gpsLocationListener);
+                locationupdate( Double.toString(latitude), Double.toString(longitude));
+            }else{
+                //This is what you need:
+                lm.requestLocationUpdates(provider, 1000, 0, gpsLocationListener);
+            }
         }
 
     }
@@ -219,8 +226,17 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
 
         //Log.i("TestLog" ,"   경도 :"+crntLocation.getLatitude()+"   위도"+crntLocation.getLongitude());
 
+
+        // 저장했을때와 같은 key로 xml에 접근한다.
+        SharedPreferences pref = getSharedPreferences("meminfo", MODE_PRIVATE);
+
+        // key에 해당한 value를 불러온다.
+        // 두번째 매개변수는 , key에 해당하는 value값이 없을 때에는 이 값으로 대체한다.
+        String resultgender = pref.getString("gender", "");
+
+
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<Resultm> call = apiInterface.requestinfo();
+        Call<Resultm> call = apiInterface.requestinfo(resultgender);
 
         call.enqueue(new Callback<Resultm>() {
             @Override
@@ -316,6 +332,55 @@ public class Activity_Guard_accept extends AppCompatActivity implements Recycler
             }
         });
 
+    }
+
+
+
+    //안심이 현재위치 서버에 업데이트
+    private  void locationupdate(String latitude, String longitude){
+        //Log.i("TestLog" ,"   경도 :"+crntLocation.getLatitude()+"   위도"+crntLocation.getLongitude());
+
+        // 저장했을때와 같은 key로 xml에 접근한다.
+        SharedPreferences pref = getSharedPreferences("meminfo", MODE_PRIVATE);
+
+        // key에 해당한 value를 불러온다.
+        // 두번째 매개변수는 , key에 해당하는 value값이 없을 때에는 이 값으로 대체한다.
+        String resultId = pref.getString("memId", "");
+
+
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<Resultm> call = apiInterface.hlocationupdate(resultId,latitude ,longitude);
+
+        call.enqueue(new Callback<Resultm>() {
+            @Override
+            public void onResponse(Call<Resultm> call, Response<Resultm> response) {
+
+                //정상 결과
+                Resultm result = response.body();
+                String result_code = response.body().getResult_code();
+                int result_row = response.body().getResult_row();
+
+                if (response.body() != null) {
+                    // if (result.getResult().equals("ok")) {
+                    if (result_code.equals("100")) {
+                        Log.i("Main_Guard", "헬퍼 현재 상태 업데이트 완료 ");
+
+                    } else if (result_code.equals("200")) {
+                        //실패
+                        Toast.makeText(getApplicationContext(), "불러오기 실패하였습니다. 확인 부탁드립니다.", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Resultm> call, Throwable t) {
+                //네트워크 문제
+                Toast.makeText(getApplicationContext(), "서비스 연결이 원활하지 않습니다", Toast.LENGTH_SHORT).show();
+                Log.e(" 에러 발생 Log ", t.getMessage());
+            }
+        });
     }
 
 
