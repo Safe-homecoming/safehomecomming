@@ -24,7 +24,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WorkCheck"></activity>
+        <activity android:name=".Lostchild"></activity>
+        <activity android:name=".WorkCheck" />
 
         <receiver android:name=".ScreenReceiver" />
 
