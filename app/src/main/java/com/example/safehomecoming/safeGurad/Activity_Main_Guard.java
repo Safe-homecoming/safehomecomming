@@ -33,6 +33,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.safehomecoming.Activity_Citizeninfo;
 import com.example.safehomecoming.Emergency_Mode;
 import com.example.safehomecoming.R;
@@ -66,8 +72,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.example.safehomecoming.Activity_Login.GET_TOKEN;
 import static com.example.safehomecoming.Activity_Login.GET_USER_ID;
@@ -145,11 +153,8 @@ public class Activity_Main_Guard extends AppCompatActivity
 
         matchwait = (LinearLayout) findViewById(R.id.matchwait_lay); //매칭 대기하기 layout
         matchok = (LinearLayout) findViewById(R.id.matchok_lay); //매칭 완료 후의 layout
-
         phonebtn = (ImageView) findViewById(R.id.phonebtn);// 요청자에게 전화 걸기
-
         leftdistance = (TextView) findViewById(R.id.textdistance);// 요청자와의 남은 거리
-
 
         // 네비게이션
         button_nav = findViewById(R.id.button_nav);
@@ -309,7 +314,6 @@ public class Activity_Main_Guard extends AppCompatActivity
         // 구글 지도 관련 설정 끝
         //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-
         // todo: 네비게이션 버튼 모양 세팅
         if (navIsOpen)
         {
@@ -349,8 +353,17 @@ public class Activity_Main_Guard extends AppCompatActivity
             }
         });
 
-
+        // 미아 찾기
+        nav_my_child.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getStrayChild();
+            }
+        });
     }
+
 
     private  void locationupdate(String latitude, String longitude){
         //Log.i("TestLog" ,"   경도 :"+crntLocation.getLatitude()+"   위도"+crntLocation.getLongitude());
@@ -398,7 +411,104 @@ public class Activity_Main_Guard extends AppCompatActivity
         });
     }
 
+    String StrayChildLocation[];
+    // todo: 미아 위치 조회하기
+    private void getStrayChild()
+    {
+        Log.e(TAG, "getStrayChild(): 미아 위치 조회하기");
 
+        StringRequest stringRequest
+                = new StringRequest(Request.Method.POST,
+                "http://ec2-13-125-121-5.ap-northeast-2.compute.amazonaws.com/getStrayChild.php",
+                new com.android.volley.Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        Log.e(TAG, "updateMatchFail onResponse: " + response.trim());
+
+                        StrayChildLocation = response.trim().split(", ");
+
+                        Log.e(TAG, "onResponse: 위도: " + StrayChildLocation[0] );
+                        Log.e(TAG, "onResponse: 경도: " + StrayChildLocation[1] );
+                        Log.e(TAG, "onResponse: 이름: " + StrayChildLocation[2] );
+
+                        // 주소 추출
+                        String Location = getCurrentAddress(Double.parseDouble(StrayChildLocation[0]), Double.parseDouble(StrayChildLocation[1]));
+
+                        Log.e(TAG, "onResponse: 주소: " + Location );
+
+                        Toast.makeText(mActivity,
+                                "보호중인 아이의 정보 \n" +
+                                        StrayChildLocation[2] +" \n" +
+                                        "위도: " + StrayChildLocation[0] + "\n" +
+                                        "경도: " + StrayChildLocation[1] + "\n" +
+                                        Location,
+                                Toast.LENGTH_LONG).show();
+                    }
+                },
+                new com.android.volley.Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Log.e("VolleyError", "에러: " + error.toString());
+                    }
+                })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError
+            {
+                Map<String, String> params = new HashMap<>();
+
+                return params;
+            }
+        };
+
+        // requestQueue로 로그인 결과값 요청을 시작한다.
+        RequestQueue requestQueue = Volley.newRequestQueue(Activity_Main_Guard.this);
+
+        // stringRequest메소드에 기록한 내용들로 requestQueue를 시작한다.
+        requestQueue.add(stringRequest);
+    }
+
+    // todo: 위도 경도를 주소로 변환
+    public String getCurrentAddress(double lat, double longti)
+    {
+        //지오코더... GPS를 주소로 변환
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        List<Address> addresses;
+
+        try
+        {
+            addresses = geocoder.getFromLocation(
+                    lat,
+                    longti,
+                    1);
+
+        } catch (IOException ioException)
+        {
+            //네트워크 문제
+            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            return "지오코더 서비스 사용불가";
+        } catch (IllegalArgumentException illegalArgumentException)
+        {
+            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            return "잘못된 GPS 좌표";
+        }
+
+        if (addresses == null || addresses.size() == 0)
+        {
+//            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
+            return "주소 미발견";
+        } else
+        {
+            Address address = addresses.get(0);
+
+            return address.getAddressLine(0).toString();
+        }
+    }
 
 
     // todo: 아래부터 전부 구글 지도 관련 메소드 (코드 분석 필요합니다)

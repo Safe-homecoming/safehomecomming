@@ -647,7 +647,7 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
     }
 
     // todo: 위도 경도를 주소로 변환
-    public String getCurrentAddress(LatLng latlng)
+    public String getCurrentAddress(double lat, double longti)
     {
         //지오코더... GPS를 주소로 변환
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -657,8 +657,8 @@ public class Activity_Wait_for_request_guard_response extends AppCompatActivity
         try
         {
             addresses = geocoder.getFromLocation(
-                    latlng.latitude,
-                    latlng.longitude,
+                    lat,
+                    longti,
                     1);
 
         } catch (IOException ioException)

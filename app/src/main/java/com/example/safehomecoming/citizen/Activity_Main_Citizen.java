@@ -143,7 +143,6 @@ public class Activity_Main_Citizen extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-
         Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
         startService(intent);
 
@@ -168,7 +167,7 @@ public class Activity_Main_Citizen extends AppCompatActivity
 
         button_my_guard_info = findViewById(R.id.button_my_guard_info);
         button_request_safe_guard = findViewById(R.id.button_request_safe_guard);
-//
+
         // 네비게이션
         button_nav = findViewById(R.id.button_nav);
         nav_area = findViewById(R.id.nav_area);
@@ -187,15 +186,15 @@ public class Activity_Main_Citizen extends AppCompatActivity
 
         // todo: 네비게이션 버튼 모양 세팅
         if (navIsOpen)
-
         {
-//            button_nav.setImageResource(R.drawable.ic_nav_cancel);
+            // button_nav.setImageResource(R.drawable.ic_nav_cancel);
+            // button_nav.setBackground(getDrawable(R.drawable.ic_nav_cancel));
             button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_cancel));
-//            button_nav.setBackground(getDrawable(R.drawable.ic_nav_cancel));
             Log.e(TAG, "onCreate: navIsOpen: " + navIsOpen);
             navIsOpen = false;
-        } else
+        }
 
+        else
         {
 //            button_nav.setImageResource(R.drawable.ic_nav_open);
             button_nav.setImageDrawable(getResources().getDrawable(R.drawable.ic_nav_open));
@@ -314,8 +313,56 @@ public class Activity_Main_Citizen extends AppCompatActivity
             }
         });
 
+        // 미아 찾기
+        nav_my_child.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getStrayChild();
+            }
+        });
+
         // todo: 매칭 여부 확인하기
         getMatchResult(GET_USER_ID);
+    }
+
+    // todo: 위도 경도를 주소로 변환
+    public String getCurrentAddress(double lat, double longti)
+    {
+        //지오코더... GPS를 주소로 변환
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        List<Address> addresses;
+
+        try
+        {
+            addresses = geocoder.getFromLocation(
+                    lat,
+                    longti,
+                    1);
+
+        } catch (IOException ioException)
+        {
+            //네트워크 문제
+            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            return "지오코더 서비스 사용불가";
+        } catch (IllegalArgumentException illegalArgumentException)
+        {
+            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            return "잘못된 GPS 좌표";
+        }
+
+        if (addresses == null || addresses.size() == 0)
+        {
+//            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
+            return "주소 미발견";
+        } else
+        {
+            Address address = addresses.get(0);
+
+            return address.getAddressLine(0).toString();
+        }
     }
 
     // todo: 네비게이션 버튼 이벤트 모음
@@ -436,6 +483,67 @@ public class Activity_Main_Citizen extends AppCompatActivity
                 Map<String, String> params = new HashMap<>();
 
                 params.put("userId", userId);
+
+                return params;
+            }
+        };
+
+        // requestQueue로 로그인 결과값 요청을 시작한다.
+        RequestQueue requestQueue = Volley.newRequestQueue(Activity_Main_Citizen.this);
+
+        // stringRequest메소드에 기록한 내용들로 requestQueue를 시작한다.
+        requestQueue.add(stringRequest);
+    }
+
+    String StrayChildLocation[];
+    // todo: 미아 위치 조회하기
+    private void getStrayChild()
+    {
+        Log.e(TAG, "getStrayChild(): 미아 위치 조회하기");
+
+        StringRequest stringRequest
+                = new StringRequest(Request.Method.POST,
+                "http://ec2-13-125-121-5.ap-northeast-2.compute.amazonaws.com/getStrayChild.php",
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        Log.e(TAG, "updateMatchFail onResponse: " + response.trim());
+
+                        StrayChildLocation = response.trim().split(", ");
+
+                        Log.e(TAG, "onResponse: 위도: " + StrayChildLocation[0] );
+                        Log.e(TAG, "onResponse: 경도: " + StrayChildLocation[1] );
+                        Log.e(TAG, "onResponse: 이름: " + StrayChildLocation[2] );
+
+                        // 주소 추출
+                        String Location = getCurrentAddress(Double.parseDouble(StrayChildLocation[0]), Double.parseDouble(StrayChildLocation[1]));
+
+                        Log.e(TAG, "onResponse: 주소: " + Location );
+
+                        Toast.makeText(mActivity,
+                                   "보호중인 아이의 정보 \n" +
+                                           StrayChildLocation[2] +" \n" +
+                                        "위도: " + StrayChildLocation[0] + "\n" +
+                                        "경도: " + StrayChildLocation[1] + "\n" +
+                                         Location,
+                                Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Log.e("VolleyError", "에러: " + error.toString());
+                    }
+                })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError
+            {
+                Map<String, String> params = new HashMap<>();
 
                 return params;
             }
@@ -574,6 +682,8 @@ public class Activity_Main_Citizen extends AppCompatActivity
                 = new LatLng(location.getLatitude(), location.getLongitude());
 
 //        Log.d(TAG, "onLocationChanged : ");
+
+//        Log.e(TAG, "onLocationChanged: currentPosition: " + currentPosition);
 
         String markerTitle = getCurrentAddress(currentPosition);
         String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
