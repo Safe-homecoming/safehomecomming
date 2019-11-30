@@ -24,7 +24,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Lostchild"></activity>
+        <activity android:name=".Lostchild">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".WorkCheck" />
 
         <receiver android:name=".ScreenReceiver" />
@@ -69,13 +76,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD8SEqU0isv6414TAp_SQFIu-KxZHCo3uw" />
-
+<!--        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>-->
         <activity android:name=".Activity_Login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".safeGurad.Activity_Main_Guard" />
         <activity android:name=".citizen.Activity_Main_Citizen" />

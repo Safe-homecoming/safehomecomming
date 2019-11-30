@@ -194,15 +194,7 @@ public class Activity_Main_Guard extends AppCompatActivity
         }
 
         // View Find 끝
-        //귀가 완료버튼
-        finishbtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                //귀가 완료 버튼 에서 update할것
-            }
-        });
+
 
         // 요청자 정보 버튼
         citizeninfobtn.setOnClickListener(new View.OnClickListener()
