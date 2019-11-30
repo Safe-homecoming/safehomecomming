@@ -550,7 +550,8 @@ public class Activity_Main_Guard extends AppCompatActivity
         if (addresses == null || addresses.size() == 0)
         {
 //            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
-            return "주소 미발견";
+//            return "주소 미발견";
+            return " ";
         } else
         {
             Address address = addresses.get(0);
@@ -558,7 +559,6 @@ public class Activity_Main_Guard extends AppCompatActivity
             return address.getAddressLine(0).toString();
         }
     }
-
 
     // todo: 아래부터 전부 구글 지도 관련 메소드 (코드 분석 필요합니다)
     @Override

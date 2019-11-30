@@ -356,7 +356,8 @@ public class Activity_Main_Citizen extends AppCompatActivity
         if (addresses == null || addresses.size() == 0)
         {
 //            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
-            return "주소 미발견";
+//            return "주소 미발견";
+            return " ";
         } else
         {
             Address address = addresses.get(0);
